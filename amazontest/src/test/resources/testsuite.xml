@@ -17,6 +17,7 @@
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test>
+  <!-- 
   <test name="Test Galaxy Tab">
   <parameter name="targetEnvironment" value="Galaxy Tab" />
     <classes>
@@ -41,5 +42,6 @@
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test>
+  -->
   <!-- Test -->
 </suite> <!-- Suite -->

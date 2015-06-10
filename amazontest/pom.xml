@@ -91,7 +91,7 @@
 				<version>2.18.1</version>
 				<configuration>
 					<suiteXmlFiles>
-						<suiteXmlFile>src/test/resources/${suite}.xml</suiteXmlFile>
+						<suiteXmlFile>src/test/resources/testsuite.xml</suiteXmlFile>
 					</suiteXmlFiles>
 					<testFailureIgnore>false</testFailureIgnore>
 					<properties>

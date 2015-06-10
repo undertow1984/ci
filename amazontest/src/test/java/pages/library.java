@@ -180,7 +180,7 @@ public class library {
 		    final String ESCAPE_PROPERTY = "org.uncommons.reportng.escape-output";
 		    System.setProperty(ESCAPE_PROPERTY, "false");
 		    
-			String userDirector = "/test-output/html/screenshots/"; 
+			String userDirector = "./test-output/html/screenshots/"; 
 			System.out.println(userDirector);
 			Reporter.log("<u><b>" + text + "</b></u><br><a href=\""+ userDirector + destFile +"\"><img src=\"file:///" + userDirector 
 	                     + destFile + "\" alt=\"\""+ "height='100' width='100'/> "+"<br />"); 
@@ -206,7 +206,7 @@ public class library {
 	    final String ESCAPE_PROPERTY = "org.uncommons.reportng.escape-output";
 	    System.setProperty(ESCAPE_PROPERTY, "false");
 	    
-		String userDirector = "/test-output/html/screenshots/"; 
+		String userDirector = "./test-output/html/screenshots/"; 
 		System.out.println(userDirector);
 		String destFileNew = destFile + ".pdf";
 		Reporter.log("<a href=\""+ userDirector + destFileNew +"\">Perfecto Report</a><br />");

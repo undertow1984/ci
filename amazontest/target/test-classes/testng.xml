@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite thread-count="2" name="Suite" parallel="tests">
+ <listeners>
+	  <listener class-name="org.uncommons.reportng.HTMLReporter"/>
+      <listener class-name="org.uncommons.reportng.JUnitXMLReporter"/>
+  </listeners>
+    <test name="Test Galaxy S5">
+  <parameter name="targetEnvironment" value="Galaxy S5" />
+    <classes>
+      <class name="AmazonTesting.AmazonTestSystem"/>
+    </classes>
+  </test>
+    <test name="Test Internet Explorer">
+  <parameter name="targetEnvironment" value="Internet Explorer" />
+    <classes>
+      <class name="AmazonTesting.AmazonTestSystem"/>
+    </classes>
+  </test>
+  <test name="Test Galaxy Tab">
+  <parameter name="targetEnvironment" value="Galaxy Tab" />
+    <classes>
+      <class name="AmazonTesting.AmazonTestSystem"/>
+    </classes>
+  </test>  
+      <test name="Test iPhone 5C">
+  <parameter name="targetEnvironment" value="iPhone-5C" />
+    <classes>
+      <class name="AmazonTesting.AmazonTestSystem"/>
+    </classes>
+  </test>  
+     <test name="Test Firefox">
+  <parameter name="targetEnvironment" value="Firefox" />
+    <classes>
+      <class name="AmazonTesting.AmazonTestSystem"/>
+    </classes>
+  </test>  
+  <test name="Test Chrome">
+  <parameter name="targetEnvironment" value="Chrome" />
+    <classes>
+      <class name="AmazonTesting.AmazonTestSystem"/>
+    </classes>
+  </test>
+  <!-- Test -->
+</suite> <!-- Suite -->

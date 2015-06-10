@@ -166,7 +166,7 @@ public class library {
 	//taking screenshot	
 			File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 			DateFormat dateFormat = new SimpleDateFormat("dd_MMM_yyyy__hh_mm_ssaa");
-			String destDir = "./test-output/html/screenshots/";
+			String destDir = "./surefire-reports/html/screenshots/";
 			new File(destDir).mkdirs();
 			String destFile = targetEnvironment+"_"+step+"_"+dateFormat.format(new Date()) + ".png";
 
@@ -180,7 +180,7 @@ public class library {
 		    final String ESCAPE_PROPERTY = "org.uncommons.reportng.escape-output";
 		    System.setProperty(ESCAPE_PROPERTY, "false");
 		    
-			String userDirector = "./test-output/html/screenshots/";  
+			String userDirector = "./screenshots/";  
 			System.out.println(userDirector);
 			Reporter.log("<u><b>" + text + "</b></u><br><a href=\""+ userDirector + destFile +"\"><img src=\"file:///" + userDirector 
 	                     + destFile + "\" alt=\"\""+ "height='100' width='100'/> "+"<br />"); 
@@ -196,7 +196,7 @@ public class library {
 	public void downloadReportDisplay(RemoteWebDriver driver) throws IOException
 	{
 		DateFormat dateFormat = new SimpleDateFormat("dd_MMM_yyyy__hh_mm_ssaa");
-		String destDir = "./test-output/html/screenshots/";
+		String destDir = "./surefire-reports/html/screenshots/";
 		new File(destDir).mkdirs();
 		String destFile = dateFormat.format(new Date());
 
@@ -206,7 +206,7 @@ public class library {
 	    final String ESCAPE_PROPERTY = "org.uncommons.reportng.escape-output";
 	    System.setProperty(ESCAPE_PROPERTY, "false");
 	    
-		String userDirector = "./test-output/html/screenshots/"; 
+		String userDirector = "./screenshots/"; 
 		System.out.println(userDirector);
 		String destFileNew = destFile + ".pdf";
 		Reporter.log("<a href=\""+ userDirector + destFileNew +"\">Perfecto Report</a><br />");

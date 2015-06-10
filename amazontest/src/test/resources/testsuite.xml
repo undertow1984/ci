@@ -5,12 +5,14 @@
 	  <listener class-name="org.uncommons.reportng.HTMLReporter"/>
       <listener class-name="org.uncommons.reportng.JUnitXMLReporter"/>
   </listeners>
+  <!-- 
     <test name="Test Galaxy S5">
   <parameter name="targetEnvironment" value="Galaxy S5" />
     <classes>
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test>
+  -->
     <test name="Test Internet Explorer">
   <parameter name="targetEnvironment" value="Internet Explorer" />
     <classes>
@@ -18,7 +20,7 @@
     </classes>
   </test>
   
-  <!-- 
+   <!-- 
   <test name="Test Galaxy Tab">
   <parameter name="targetEnvironment" value="Galaxy Tab" />
     <classes>

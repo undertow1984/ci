@@ -150,6 +150,9 @@ public class library {
 	// String param is text associated with screen shot
 	// boolean will either add to report or not
 	public void takeScreen(String text, Boolean addReport) {
+		
+		log(text, false);
+		
 		if (!isDevice()) {
 			try {
 				Thread.sleep(2000);
@@ -178,7 +181,7 @@ public class library {
 			log("screenShot: " + destDir + "/" + destFile, false);
 			// Display screenshot to ReportNG
 			if (addReport) {
-				log(text, false);
+				
 				String userDirector = "./screenshots/";				
 				log("<u><b>||||||" + text + "</b></u><br><a href=\"" + userDirector
 						+ destFile + "\"><img src=\"" + userDirector + destFile

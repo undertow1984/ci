@@ -26,17 +26,15 @@ public class AmazonTestSystem {
 	@BeforeTest
 	public void beforeTest(String targetEnvironment)
 			throws UnsupportedEncodingException, MalformedURLException {
-		// initializes testSetup class		
+		// initializes testSetup class
 		tes = new testSetup(targetEnvironment, driver);
 		// sets up the testNG flows based on testsuite.xml
 		tes.flowControl();
 
 	}
 
-	@Test
-	public void OrderBook() throws InterruptedException, IOException {
-
-		
+	public void setPagesAndHelpers() throws UnsupportedEncodingException,
+			MalformedURLException {
 		// sets the RemoteWebDriver and initial library settings
 		lib = tes.driverAndLibrarySetup();
 		// initializes the chromehelper class
@@ -47,11 +45,14 @@ public class AmazonTestSystem {
 		searchResultsPage = new searchResults(lib);
 		// sets up the cartFunctions class
 		cart = new cartFunctions(lib);
-		
-		lib.log("orderBookStarted", false);
+	}
 
+	@Test
+	public void OrderBook() throws InterruptedException, IOException {
+		lib.log("orderBookStarted", false);
+		setPagesAndHelpers();
 		try {
-			
+
 			lib.goToPage("http://amazon.com", "Amazon.com");
 
 			chrome.firstOpenAccepteance(60);

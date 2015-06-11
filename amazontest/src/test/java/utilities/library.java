@@ -192,13 +192,15 @@ public class library {
 	// writes to console or/and report log
 	// boolean controls whether report log is written to
 	public void log(String text, Boolean addReport) {
+		String newLine = System.getProperty("line.separator");
+		
 		if (addReport) {
 			final String ESCAPE_PROPERTY = "org.uncommons.reportng.escape-output";
 			System.setProperty(ESCAPE_PROPERTY, "false");
 			Reporter.log(text.replace("<u><b>||||||", "<u><b>" + target + "_Step" + step + "_"));
 		}
 
-		System.out.println(target + "_Step" + step + "_" + text);
+		System.out.println(target + "_Step" + step + "_" + text.replace("<br>", newLine + newLine));
 	}
 
 	// Calls downloadreport, copys the perfecto report to the screen directory

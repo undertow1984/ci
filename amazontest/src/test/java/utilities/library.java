@@ -199,8 +199,10 @@ public class library {
 			System.setProperty(ESCAPE_PROPERTY, "false");
 			Reporter.log(text.replace("<u><b>||||||", "<u><b>" + target + "_Step" + step + "_"));
 		}
-
-		System.out.println(target + "_Step" + step + "_" + text + newLine + newLine);
+		else
+		{
+			System.out.println(target + "_Step" + step + "_" + text + newLine + newLine);
+		}
 	}
 
 	// Calls downloadreport, copys the perfecto report to the screen directory

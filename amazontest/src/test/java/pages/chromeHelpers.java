@@ -9,19 +9,19 @@ public class chromeHelpers {
 	}
 	
 	
-	public void firstOpenAccepteance()
+	public void firstOpenAccepteance(int wait)
 	{
 		if (lib.getTarget().contains("Galaxy"))
 		  {
 			lib.switchToContext("VISUAL");
 			  if (lib.elementExists("partialLinkText", "Accept"))
 			  {
-				  lib.clickElement("partialLinkText", "Accept", 10);
+				  lib.clickElement("partialLinkText", "Accept", wait);
 			  }
 			  
 			  if (lib.elementExists("partialLinkText", "NO THANKS"))
 			  {
-				  lib.clickElement("partialLinkText", "NO THANKS", 10);
+				  lib.clickElement("partialLinkText", "NO THANKS", wait);
 			  }
 			  
 			  lib.switchToContext("WEBVIEW");

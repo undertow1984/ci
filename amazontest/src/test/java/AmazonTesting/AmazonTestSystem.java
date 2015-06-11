@@ -46,17 +46,17 @@ public class AmazonTestSystem {
 	  	
 	  lib.goToPage("http://amazon.com","Amazon.com");
 	   
-	  chrome.firstOpenAccepteance();
+	  chrome.firstOpenAccepteance(60);
 	  
 	  homePage.searchBoxText("Army of darkness volume one", 60);
 	  
 	  homePage.searchBoxSubmit(60);
 	  
-	  searchResultsPage.selectResult("Army of Darkness Omnibus Volume 1", 10);
+	  searchResultsPage.selectResult("Army of Darkness Omnibus Volume 1", 60);
 	  
-	  cart.addToCart(10);
+	  cart.addToCart(60);
 	  
-	  cart.proceedToCheckout(10);
+	  cart.proceedToCheckout(60);
 	  
 	  }
 	  catch (Exception ex)

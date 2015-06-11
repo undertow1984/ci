@@ -94,8 +94,8 @@ public class testSetup {
 			}
 			
 			driver = new RemoteWebDriver(new URL(SELENIUM_HUB_URL), capabilities);
-			driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-			driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
+			driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+			driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
 			
 			lib = new library(driver, target, 1, device);
 			

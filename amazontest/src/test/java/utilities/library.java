@@ -52,12 +52,16 @@ public class library {
 	}
 
 	public Boolean isDevice() {
-		
-				
-		RemoteWebDriver driver = getDriver();
+		try
+		{
 		if (driver.getCapabilities().getCapability("platformName").equals("Android") || driver.getCapabilities().getCapability("platformName").equals("iOS")) {
 			return true;
 		} else {
+			return false;
+		}
+		}
+		catch (Exception ex)
+		{
 			return false;
 		}
 	}

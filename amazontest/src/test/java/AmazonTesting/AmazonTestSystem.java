@@ -15,7 +15,6 @@ import utilities.*;
 
 public class AmazonTestSystem {
 	private RemoteWebDriver driver;
-	private boolean device;
 	private library lib;
 	private testSetup tes;
 	private chromeHelpers chrome;
@@ -73,7 +72,7 @@ public class AmazonTestSystem {
 			throw ex;
 		} finally {
 			lib.getDriver().close();
-			if (device) {
+			if (lib.isDevice()) {
 				lib.downloadReportDisplay(driver, true);
 			}
 		}

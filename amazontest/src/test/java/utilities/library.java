@@ -181,7 +181,7 @@ public class library {
 			if (addReport) {
 
 				String userDirector = "./screenshots/";				
-				log("<u><b>" + text + "</b></u><br><a href=\"" + userDirector
+				log("<u><b>||||||" + text + "</b></u><br><a href=\"" + userDirector
 						+ destFile + "\"><img src=\"" + userDirector + destFile
 						+ "\" alt=\"\"" + "height='100' width='100'/> "
 						+ "<br />", addReport);
@@ -195,7 +195,7 @@ public class library {
 		if (addReport) {
 			final String ESCAPE_PROPERTY = "org.uncommons.reportng.escape-output";
 			System.setProperty(ESCAPE_PROPERTY, "false");
-			Reporter.log(text);
+			Reporter.log(text.replace("<u><b>||||||", "<u><b>" + target + "_Step" + step + "_"));
 		}
 
 		System.out.println(target + "_Step" + step + "_" + text);

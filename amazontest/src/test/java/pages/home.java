@@ -1,37 +1,26 @@
 package pages;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.testng.Reporter;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.AfterTest;
-import com.perfectomobile.httpclient.utils.FileUtils;
-import com.perfectomobile.selenium.api.IMobileDevice;
-import java.io.UnsupportedEncodingException;
-import pages.*;
-
 public class home {
-private RemoteWebDriver driver;
+	private library lib;
 	
-	public home(RemoteWebDriver driver)
+	public home(library l)
 	{
-		this.driver = driver;
+		this.lib = l;
+		
 	}
+	
+	public void searchBoxText(String searchbox, int wait)
+	{
+		lib.setText("xpath", "(//input[@id='nav-search-keywords' or @id='twotabsearchtextbox'] )[1]", searchbox, true,wait);
+	  	  
+		  
+		  
+	}
+	
+	public void searchBoxSubmit(int wait)
+	{
+		lib.submitElement("xpath", "(//input[@id='nav-search-keywords'  or @id='twotabsearchtextbox'])[1]",wait);
+	}
+	
 
 }

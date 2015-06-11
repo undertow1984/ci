@@ -10,19 +10,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
-import org.openqa.selenium.Platform;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.RemoteExecuteMethod;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -30,17 +23,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Reporter;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.AfterTest;
-
 import com.perfectomobile.httpclient.utils.FileUtils;
-import com.perfectomobile.selenium.api.IMobileDevice;
 
-import java.io.UnsupportedEncodingException;
-
-import pages.*;
 
 public class library {
 	
@@ -49,17 +33,37 @@ public class library {
 	private int step=0;
 	private Boolean device=false;
 			
-	public library(RemoteWebDriver driver, String target, int Step, Boolean device)
-	{
+	public library(RemoteWebDriver driver, String target, int step, Boolean device)
+	{	
 		targetEnvironment = target;
-		step=Step;
 		this.device=device;
 		this.driver = driver;
+		this.step = step;
 	}
 	
 	public library(RemoteWebDriver driver)
 	{		
 		this.driver = driver;
+	}
+	
+	public int getStep()
+	{
+		return step;
+	}
+	
+	public String getTarget()
+	{
+		return targetEnvironment;
+	}
+	
+	public Boolean isDevice()
+	{
+		return device;
+	}
+	
+	public RemoteWebDriver getDriver()
+	{
+		return driver;
 	}
 	
 	//switch driver method
@@ -88,12 +92,14 @@ public class library {
     }
 	
 	
-	private static void sleep(long millis) {
+	public void sleep(long millis) {
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
 		}
 	}
+	
+	
 	
 	
 	
@@ -226,19 +232,7 @@ public class library {
 				System.out.println("Got exception " + ex); }
 			}
 			
-	  public String getConfigurationProperty(String envKey,
-				String sysKey, String defValue) {
-			String retValue = defValue;
-			String envValue = System.getenv(envKey);
-			String sysValue = System.getProperty(sysKey);
-			// system property prevails over environment variable
-			if (sysValue != null) {
-				retValue = sysValue;
-			} else if (envValue != null) {
-				retValue = envValue;
-			}
-			return retValue;
-	}	    
+	  
 	  
 		public void goToPage(String url, String title)
 		{

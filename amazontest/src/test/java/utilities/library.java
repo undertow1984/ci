@@ -52,11 +52,10 @@ public class library {
 	}
 
 	public Boolean isDevice() {
+		
+				
 		RemoteWebDriver driver = getDriver();
-		if (driver.getCapabilities().getCapability("platform")
-				.equals("Android")
-				|| driver.getCapabilities().getCapability("platform")
-						.equals("iOS")) {
+		if (driver.getCapabilities().getCapability("platformName").equals("Android") || driver.getCapabilities().getCapability("platformName").equals("iOS")) {
 			return true;
 		} else {
 			return false;
@@ -201,7 +200,7 @@ public class library {
 		}
 		else
 		{
-			System.out.println(target + "_Step" + step + "_" + text + newLine + newLine);
+			System.out.println(target + "_Step" + step + "_" + text + newLine );
 		}
 	}
 

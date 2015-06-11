@@ -33,8 +33,8 @@ public class AmazonTestSystem {
 
 	}
 
-	public void setPagesAndHelpers(library lib) throws UnsupportedEncodingException,
-			MalformedURLException {		
+	public void setPagesAndHelpers(library lib)
+			throws UnsupportedEncodingException, MalformedURLException {
 		// initializes the chromehelper class
 		chrome = new chromeHelpers(lib);
 		// sets up the home page class
@@ -50,9 +50,9 @@ public class AmazonTestSystem {
 		// sets the RemoteWebDriver and initial library settings
 		lib = tes.driverAndLibrarySetup();
 		setPagesAndHelpers(lib);
-		
-		//test start
-		lib.log("orderBookStarted", false);		
+
+		// test start
+		lib.log("orderBookStarted", false);
 		try {
 
 			lib.goToPage("http://amazon.com", "Amazon.com");
@@ -74,9 +74,12 @@ public class AmazonTestSystem {
 			lib.log("Got exception " + ex, true);
 			throw ex;
 		} finally {
-			lib.getDriver().close();
+
 			if (lib.isDevice()) {
-				lib.downloadReportDisplay(driver, true);
+				lib.getDriver().close();
+				lib.downloadReportDisplay(lib.getDriver(), true);
+			} else {
+				lib.getDriver().close();
 			}
 		}
 	}

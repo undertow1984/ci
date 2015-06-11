@@ -1,5 +1,7 @@
 package pages;
 
+import utilities.*;
+
 public class chromeHelpers {
 	private library lib;
 	
@@ -11,7 +13,8 @@ public class chromeHelpers {
 	
 	public void firstOpenAccepteance(int wait)
 	{
-		if (lib.getTarget().contains("Galaxy"))
+		if (lib.getDriver().getCapabilities().getCapability("platform")
+				.equals("Android"))			
 		  {
 			lib.switchToContext("VISUAL");
 			  if (lib.elementExists("partialLinkText", "Accept"))

@@ -12,7 +12,7 @@
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test>
-<!-- 
+
     <test name="Test Internet Explorer">
   <parameter name="targetEnvironment" value="Internet Explorer" />
     <classes>
@@ -26,14 +26,14 @@
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test>
-  -->  
+
       <test name="Test iPhone 6">
   <parameter name="targetEnvironment" value="iPhone-6" />
     <classes>
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test>  
-  <!-- 
+ 
      <test name="Test Firefox">
   <parameter name="targetEnvironment" value="Firefox" />
     <classes>
@@ -46,6 +46,6 @@
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test>
- -->
+
   <!-- Test -->
 </suite> <!-- Suite -->

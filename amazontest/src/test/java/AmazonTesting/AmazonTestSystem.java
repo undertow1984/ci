@@ -49,8 +49,8 @@ public class AmazonTestSystem {
 
 	@Test
 	public void OrderBook() throws InterruptedException, IOException {
-		lib.log("orderBookStarted", false);
 		setPagesAndHelpers();
+		lib.log("orderBookStarted", false);		
 		try {
 
 			lib.goToPage("http://amazon.com", "Amazon.com");

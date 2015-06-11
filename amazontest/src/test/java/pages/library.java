@@ -182,7 +182,7 @@ public class library {
 		    
 			String userDirector = "./screenshots/";  
 			System.out.println(userDirector);
-			Reporter.log("<u><b>" + text + "</b></u><br><a href=\""+ userDirector + destFile +"\"><img src=\"file:///" + userDirector 
+			Reporter.log("<u><b>" + text + "</b></u><br><a href=\""+ userDirector + destFile +"\"><img src=\"" + userDirector 
 	                     + destFile + "\" alt=\"\""+ "height='100' width='100'/> "+"<br />"); 
 	        //Reporter.setCurrentTestResult(null);
 		}

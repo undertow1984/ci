@@ -65,7 +65,7 @@ public class AmazonTestSystem {
 	  }
 	  finally
 	  {
-		  driver.close();
+		  lib.getDriver().close();
 		  if (device) {
 			  lib.downloadReportDisplay(driver);
 		  }
@@ -78,14 +78,14 @@ public class AmazonTestSystem {
 	 
 	  try
 	  {
-		 driver.close();
+		  lib.getDriver().close();
 	  }
 	  catch(Exception ex)
 	  {
 	  
 	  }
 	  
-	  driver.quit();
+	  lib.getDriver().quit();
   }
   
 

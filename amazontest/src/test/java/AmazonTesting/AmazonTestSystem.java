@@ -33,10 +33,8 @@ public class AmazonTestSystem {
 
 	}
 
-	public void setPagesAndHelpers() throws UnsupportedEncodingException,
-			MalformedURLException {
-		// sets the RemoteWebDriver and initial library settings
-		lib = tes.driverAndLibrarySetup();
+	public void setPagesAndHelpers(library lib) throws UnsupportedEncodingException,
+			MalformedURLException {		
 		// initializes the chromehelper class
 		chrome = new chromeHelpers(lib);
 		// sets up the home page class
@@ -49,7 +47,11 @@ public class AmazonTestSystem {
 
 	@Test
 	public void OrderBook() throws InterruptedException, IOException {
-		setPagesAndHelpers();
+		// sets the RemoteWebDriver and initial library settings
+		lib = tes.driverAndLibrarySetup();
+		setPagesAndHelpers(lib);
+		
+		//test start
 		lib.log("orderBookStarted", false);		
 		try {
 

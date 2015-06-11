@@ -200,7 +200,7 @@ public class library {
 			Reporter.log(text.replace("<u><b>||||||", "<u><b>" + target + "_Step" + step + "_"));
 		}
 
-		System.out.println(target + "_Step" + step + "_" + text.replace("<br />", newLine + newLine));
+		System.out.println(target + "_Step" + step + "_" + text.replace("<br />", newLine ) + newLine);
 	}
 
 	// Calls downloadreport, copys the perfecto report to the screen directory

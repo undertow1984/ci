@@ -254,7 +254,7 @@ public class library {
 	public void goToPage(String url, String title) {		
 		driver.get(url);
 		waitForTitle(10, title);
-		takeScreen("goToPage" + ":" + url + "_" + title, true);
+		takeScreen("goToPage: " + url + "_" + title, true);
 		step++;
 	}
 

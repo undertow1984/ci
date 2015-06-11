@@ -178,7 +178,7 @@ public class library {
 			log("screenShot: " + destDir + "/" + destFile, false);
 			// Display screenshot to ReportNG
 			if (addReport) {
-
+				log(text, false);
 				String userDirector = "./screenshots/";				
 				log("<u><b>||||||" + text + "</b></u><br><a href=\"" + userDirector
 						+ destFile + "\"><img src=\"" + userDirector + destFile

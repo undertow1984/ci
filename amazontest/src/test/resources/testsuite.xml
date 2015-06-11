@@ -27,8 +27,8 @@
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test>  
-      <test name="Test iPhone 5C">
-  <parameter name="targetEnvironment" value="iPhone-5C" />
+      <test name="Test iPhone 6">
+  <parameter name="targetEnvironment" value="iPhone-6" />
     <classes>
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>

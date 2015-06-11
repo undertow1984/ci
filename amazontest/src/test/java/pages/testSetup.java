@@ -40,10 +40,10 @@ public class testSetup {
 				capabilities.setCapability("model", "Galaxy S5");
 				capabilities.setCapability("browserName", "mobileOS");
 				break;
-			case "iPhone-5C":
+			case "iPhone-6":
 				device = true;
 				capabilities.setCapability("platformName", "iOS");
-				capabilities.setCapability("model", "iPhone-5");
+				capabilities.setCapability("model", "iPhone-6");
 				capabilities.setCapability("browserName", "Safari");
 				break;
 			case "Galaxy Tab":

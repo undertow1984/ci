@@ -188,7 +188,7 @@ public class library {
 		}
 	}
 	
-	public void log(String text)
+	public void log(String text) 
 	{
 		Reporter.log("<b>" + text + "</b>");	
 	}

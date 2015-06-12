@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.Assert;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeTest;
@@ -59,9 +60,15 @@ public class AmazonTestSystem {
 			
 			
 
-		   android.chromeFirstOpenAccepteance(60);
+		    android.chromeFirstOpenAccepteance(60);
 
 			homePage.searchBoxText("Army of darkness volume one", 60);
+			
+			Assert.assertEquals("1", "2");
+			
+			
+			
+			
 
 			homePage.searchBoxSubmit(60);
 

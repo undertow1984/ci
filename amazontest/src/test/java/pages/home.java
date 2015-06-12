@@ -7,9 +7,9 @@ public class home {
 
 	public home(library l) {
 		this.lib = l;
-
 	}
-
+	
+	//enter text in search box
 	public void searchBoxText(String searchbox, int wait) {
 		lib.setText(
 				"xpath",
@@ -17,7 +17,8 @@ public class home {
 				searchbox, true, wait);
 
 	}
-
+	
+	//submit the search box value
 	public void searchBoxSubmit(int wait) {
 		lib.submitElement(
 				"xpath",

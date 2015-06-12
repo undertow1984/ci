@@ -23,6 +23,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.Reporter;
 
 import com.perfectomobile.httpclient.utils.FileUtils;
@@ -38,19 +39,28 @@ public class library {
 		this.target = target;
 		this.step = step;
 	}
-
+		
 	public library(RemoteWebDriver driver) {
 		this.driver = driver;
 	}
+	
+	//can be called from test to automatically fail for debug purposes
+	public void autoFail()
+	{
+		Assert.assertEquals("1", "2");
+	}
 
+	//returns the string value setup in testNG for the targetEnvironment
 	public String getTarget() {
 		return target;
 	}
 
+	//returns the current step
 	public int getStep() {
 		return step;
 	}
-
+	
+	//checks if current test is running on a device
 	public Boolean isDevice() {
 		try
 		{
@@ -66,6 +76,7 @@ public class library {
 		}
 	}
 
+	//returns the driver
 	public RemoteWebDriver getDriver() {
 		return driver;
 	}
@@ -143,6 +154,7 @@ public class library {
 
 	// close native application
 	// this needs to be further expanded out to support all available methods
+	//this is not used and just here for future purposes
 	public void closeApplication(String application) {
 		String command = "mobile:application.close";
 		Map<String, Object> params = new HashMap<>();

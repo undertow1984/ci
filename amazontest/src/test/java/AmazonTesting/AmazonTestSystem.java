@@ -55,35 +55,33 @@ public class AmazonTestSystem {
 		// test start
 		lib.log("orderBookStarted", false);
 		try {
-
+						
+			lib.log("Going to amazon.com",false);
 			lib.goToPage("http://amazon.com", "Amazon.com");
-			
-			
-
+						
+			lib.log("Checking if Chrome needs acceptance",false);
 		    android.chromeFirstOpenAccepteance(60);
-
+		                
+			lib.log("Enter book into search box",false);
 			homePage.searchBoxText("Army of darkness volume one", 60);
-			
-			Assert.assertEquals("1", "2");
-			
-			
-			
-			
-
+						
+			lib.log("Searching for book", false);
 			homePage.searchBoxSubmit(60);
 
+			lib.log("Selecting book from results", false);
 			searchResultsPage.selectResult("Army of Darkness Omnibus Volume 1",
 					60);
-
+						
+			lib.log("Adding book to cart", false);
 			cart.addToCart(60);
 
+			lib.log("Proceeding to checkout", false);
 			cart.proceedToCheckout(60);
 
 		} catch (Exception ex) {
-			lib.log("Got exception " + ex, true);
 			throw ex;
 		} finally {
-
+			//downloading the perfecto report and cleaning up the drivers 
 			if (lib.isDevice()) {
 				lib.getDriver().close();
 				lib.downloadReportDisplay(lib.getDriver(), true);
@@ -104,19 +102,22 @@ public class AmazonTestSystem {
 		lib.log("cleanCartStarted", false);
 		try {
 
+			lib.log("Going to amazon.com", false);
 			lib.goToPage("http://amazon.com", "Amazon.com");
 			
+			lib.log("Checking if Chrome needs acceptance",false);
 		    android.chromeFirstOpenAccepteance(60);
 		    
+		    lib.log("Clicking cart icon",false);
 		    cart.clickCart();
 		    
+		    lib.log("Deleting all items from the cart",false);
 		    cart.deleteFromCart();
 			
-		} catch (Exception ex) {
-			lib.log("Got exception " + ex, true);
+		} catch (Exception ex) {			
 			throw ex;
 		} finally {
-
+			//downloading the perfecto report and cleaning up the drivers 
 			if (lib.isDevice()) {
 				lib.getDriver().close();
 				lib.downloadReportDisplay(lib.getDriver(), true);
@@ -130,6 +131,7 @@ public class AmazonTestSystem {
 	@AfterTest
 	public void afterTest() throws IOException {
 
+		//re-attempt driver clean up in case of massive failure
 		try {
 			lib.getDriver().close();
 		} catch (Exception ex) {

@@ -10,6 +10,7 @@ public class searchResults {
 
 	}
 
+	//select search result element based on visible text
 	public void selectResult(String result, int wait) {
 		lib.clickElement("linkText", result, wait);
 	}

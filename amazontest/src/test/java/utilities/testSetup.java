@@ -24,6 +24,7 @@ public class testSetup {
 		this.driver = driver;
 	}
 
+	//sets capabilities based on environment returned from testNG
 	public void flowControl() {
 		switch (target) {
 		case "iPad Mini":			
@@ -74,6 +75,8 @@ public class testSetup {
 		}
 	}
 
+	//connects to selenium grid at perfecto as well as establishes
+	//device connectivity to mobile cloud
 	public library driverAndLibrarySetup() throws UnsupportedEncodingException,
 			MalformedURLException {
 		if (device) {
@@ -101,6 +104,7 @@ public class testSetup {
 		return lib;
 	}
 
+	//parses the cloud/grid connectivity parameters
 	public String getConfigurationProperty(String envKey, String sysKey,
 			String defValue) {
 		String retValue = defValue;

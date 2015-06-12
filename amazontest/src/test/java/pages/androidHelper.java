@@ -13,7 +13,8 @@ public class androidHelper {
 		this.lib = l;	
 	}
 	
-	
+	//used to accept the messaging from chrome upon first launch
+	//on in case of app data reset / app update
 	public void chromeFirstOpenAccepteance(int wait)
 	{
 		if (lib.getDriver().getCapabilities().getCapability("platform")
@@ -34,7 +35,8 @@ public class androidHelper {
 		  }
 		}
 	
-	
+	// this needs to be further expanded out to support all available methods
+	//this is not used and just here for future purposes
 	public void networkSettings(String wifi, String data, String airplane) {
 		String command = "mobile:networksettings:set";
 		Map<String, Object> params = new HashMap<>();

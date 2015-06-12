@@ -31,52 +31,95 @@ import com.perfectomobile.httpclient.utils.FileUtils;
 public class library {
 
 	private RemoteWebDriver driver;
-	private String target="";
+	private String target = "";
 	private int step = 0;
+	private String network;
+	private String networkLatency;
 
-	public library(RemoteWebDriver driver, String target, int step) {
+	public library(RemoteWebDriver driver, String target, int step,
+			String network, String networkLatency) {
 		this.driver = driver;
 		this.target = target;
 		this.step = step;
+		this.network = network;
+		this.networkLatency = networkLatency;
 	}
-		
+
 	public library(RemoteWebDriver driver) {
 		this.driver = driver;
 	}
-	
-	//can be called from test to automatically fail for debug purposes
-	public void autoFail()
-	{
+
+	public String getNetwork() {
+		return network;
+	}
+
+	public String getNetworkLatency() {
+		return networkLatency;
+	}
+
+	// can be called from test to automatically fail for debug purposes
+	public void autoFail() {
 		Assert.assertEquals("1", "2");
 	}
 
-	//returns the string value setup in testNG for the targetEnvironment
+	// returns the string value setup in testNG for the targetEnvironment
 	public String getTarget() {
 		return target;
 	}
 
-	//returns the current step
+	// returns the current step
 	public int getStep() {
 		return step;
 	}
-	
-	//checks if current test is running on a device
+
+	// sets network virtualization
+	public Object startNetworkVirtualization(String profile, String latency) {
+		log("setting network settings: " + profile + "_" + latency, true);
+		String command = "mobile:vnetwork:start";
+		Map<String, Object> params = new HashMap<>();
+		params.put("profile", profile);
+		params.put("latency", latency);
+		Object result = driver.executeScript(command, params);
+		return result;
+	}
+
+	// updates network virtualization
+	public Object updateNetworkVirtualization(String profile, String latency) {
+		log("updating network settings: " + profile + "_" + latency, true);
+		String command = "mobile:vnetwork:update";
+		Map<String, Object> params = new HashMap<>();
+		params.put("profile", profile);
+		params.put("latency", latency);
+		Object result = driver.executeScript(command, params);
+		return result;
+	}
+
+	// stops network virtualization
+	public Object stopNetworkVirtualization() {
+		log("stopping network settings", true);
+		String command = "mobile:vnetwork:stop";
+		Map<String, Object> params = new HashMap<>();
+		Object result = driver.executeScript(command, params);
+		return result;
+	}
+
+	// checks if current test is running on a device
 	public Boolean isDevice() {
-		try
-		{
-		if (driver.getCapabilities().getCapability("platformName").equals("Android") || driver.getCapabilities().getCapability("platformName").equals("iOS")) {
-			return true;
-		} else {
-			return false;
-		}
-		}
-		catch (Exception ex)
-		{
+		try {
+			if (driver.getCapabilities().getCapability("platformName")
+					.equals("Android")
+					|| driver.getCapabilities().getCapability("platformName")
+							.equals("iOS")) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception ex) {
 			return false;
 		}
 	}
 
-	//returns the driver
+	// returns the driver
 	public RemoteWebDriver getDriver() {
 		return driver;
 	}
@@ -85,9 +128,9 @@ public class library {
 	// switches dom between native and web and visual
 	// "WEBVIEW", "NATIVE_APP" or "VISUAL"
 	public RemoteWebDriver switchToContext(String context) {
-		
+
 		log("switchContext: " + context, false);
-		
+
 		RemoteExecuteMethod executeMethod = new RemoteExecuteMethod(driver);
 		Map<String, String> params = new HashMap<>();
 		params.put("name", context);
@@ -113,9 +156,9 @@ public class library {
 
 	// sleeps current thread
 	public void sleep(long millis) {
-		
+
 		log("sleep: " + millis, false);
-		
+
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
@@ -154,7 +197,7 @@ public class library {
 
 	// close native application
 	// this needs to be further expanded out to support all available methods
-	//this is not used and just here for future purposes
+	// this is not used and just here for future purposes
 	public void closeApplication(String application) {
 		String command = "mobile:application.close";
 		Map<String, Object> params = new HashMap<>();
@@ -166,9 +209,9 @@ public class library {
 	// String param is text associated with screen shot
 	// boolean will either add to report or not
 	public void takeScreen(String text, Boolean addReport) {
-		
+
 		log(text, false);
-		
+
 		if (!isDevice()) {
 			try {
 				Thread.sleep(2000);
@@ -197,12 +240,12 @@ public class library {
 			log("screenShot: " + destDir + "/" + destFile, false);
 			// Display screenshot to ReportNG
 			if (addReport) {
-				
-				String userDirector = "./screenshots/";				
-				log("<u><b>||||||" + text + "</b></u><br><a href=\"" + userDirector
-						+ destFile + "\"><img src=\"" + userDirector + destFile
-						+ "\" alt=\"\"" + "height='100' width='100'/> "
-						+ "<br />", addReport);
+
+				String userDirector = "./screenshots/";
+				log("<u><b>||||||" + text + "</b></u><br><a href=\""
+						+ userDirector + destFile + "\"><img src=\""
+						+ userDirector + destFile + "\" alt=\"\""
+						+ "height='100' width='100'/> " + "<br />", addReport);
 			}
 		}
 	}
@@ -211,15 +254,14 @@ public class library {
 	// boolean controls whether report log is written to
 	public void log(String text, Boolean addReport) {
 		String newLine = System.getProperty("line.separator");
-		
+
 		if (addReport) {
 			final String ESCAPE_PROPERTY = "org.uncommons.reportng.escape-output";
 			System.setProperty(ESCAPE_PROPERTY, "false");
-			Reporter.log(text.replace("<u><b>||||||", "<u><b>" + target + "_Step" + step + "_"));
-		}
-		else
-		{
-			System.out.println(target + "_Step" + step + "_" + text + newLine );
+			Reporter.log(text.replace("<u><b>||||||", "<u><b>" + target
+					+ "_Step" + step + "_"));
+		} else {
+			System.out.println(target + "_Step" + step + "_" + text + newLine);
 		}
 	}
 
@@ -239,9 +281,9 @@ public class library {
 
 		// Display screenshot to ReportNG
 		String userDirector = "./screenshots/";
-		
+
 		String destFileNew = destFile + ".pdf";
-		
+
 		log("perfectoReport: " + userDirector + destFileNew, false);
 		if (addReport) {
 			log("<a href=\"" + userDirector + destFileNew
@@ -249,32 +291,32 @@ public class library {
 		}
 	}
 
-	//download report from perfecto
+	// download report from perfecto
 	private void downloadReport(RemoteWebDriver driver, String type,
 			String fileName) throws IOException {
-			//downloads report from perfecto
-			String command = "mobile:report:download";
-			Map<String, Object> params = new HashMap<>();
-			params.put("type", type);
-			String report = (String) driver.executeScript(command, params);
-			File reportFile = new File(fileName + "." + type);
-			BufferedOutputStream output = new BufferedOutputStream(
-					new FileOutputStream(reportFile));
-			byte[] reportBytes = OutputType.BYTES.convertFromBase64Png(report);
-			output.write(reportBytes);
-			output.close();
-		
+		// downloads report from perfecto
+		String command = "mobile:report:download";
+		Map<String, Object> params = new HashMap<>();
+		params.put("type", type);
+		String report = (String) driver.executeScript(command, params);
+		File reportFile = new File(fileName + "." + type);
+		BufferedOutputStream output = new BufferedOutputStream(
+				new FileOutputStream(reportFile));
+		byte[] reportBytes = OutputType.BYTES.convertFromBase64Png(report);
+		output.write(reportBytes);
+		output.close();
+
 	}
 
-	//sets the initial page for the browser
-	public void goToPage(String url, String title) {		
+	// sets the initial page for the browser
+	public void goToPage(String url, String title) {
 		driver.get(url);
 		waitForTitle(10, title);
 		takeScreen("goToPage: " + url + "_" + title, true);
 		step++;
 	}
 
-	//gets the current url
+	// gets the current url
 	public String getUrl() {
 		String url = "can't find url";
 		try {
@@ -285,7 +327,8 @@ public class library {
 		return url;
 	}
 
-	//will attempt to wait on the page to load and searches for the title supplied
+	// will attempt to wait on the page to load and searches for the title
+	// supplied
 	public void waitForTitle(int seconds, String title) {
 
 		try {
@@ -296,7 +339,8 @@ public class library {
 		}
 	}
 
-	//will attempt to wait on the page to load and searches for the element supplied
+	// will attempt to wait on the page to load and searches for the element
+	// supplied
 	public void waitForElement(int seconds, String by, String element) {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, seconds);
@@ -305,8 +349,8 @@ public class library {
 		} catch (Exception ex) {
 		}
 	}
-	
-	//returns an element
+
+	// returns an element
 	public WebElement getElement(String by, String element) {
 
 		try {
@@ -318,7 +362,7 @@ public class library {
 		return driver.findElement(getBy(by, element));
 	}
 
-	//checks if element exists
+	// checks if element exists
 	public Boolean elementExists(String by, String element) {
 
 		try {
@@ -330,7 +374,7 @@ public class library {
 
 	}
 
-	//clears text field
+	// clears text field
 	public void clearText(String by, String element, int timeOut) {
 		try {
 			waitForElement(timeOut, by, element);
@@ -342,8 +386,9 @@ public class library {
 		}
 
 	}
-	
-	//sets text field value and will clear the field prior to writing based on the clear boolean
+
+	// sets text field value and will clear the field prior to writing based on
+	// the clear boolean
 	public void setText(String by, String element, String data, Boolean clear,
 			int timeOut) {
 		try {
@@ -353,15 +398,15 @@ public class library {
 			}
 			driver.findElement(getBy(by, element)).sendKeys(data);
 			waitForElement(timeOut, by, element);
-			takeScreen("setText: " + by + "_" + element + "_"
-					+ data + "_" + clear, true);
+			takeScreen("setText: " + by + "_" + element + "_" + data + "_"
+					+ clear, true);
 			step++;
 		} catch (Exception ex) {
 
 		}
 	}
 
-	//gets the text of an element
+	// gets the text of an element
 	public String getText(String by, String element, int timeOut) {
 
 		try {
@@ -373,7 +418,7 @@ public class library {
 		return driver.findElement(getBy(by, element)).getText().toString();
 	}
 
-	//gets the value of an element
+	// gets the value of an element
 	public String getValue(String by, String element, int timeOut) {
 
 		try {
@@ -385,7 +430,7 @@ public class library {
 		return driver.findElement(getBy(by, element)).getAttribute("value");
 	}
 
-	//clicks and element
+	// clicks and element
 	public void clickElement(String by, String element, int timeOut) {
 
 		waitForElement(timeOut, by, element);
@@ -396,7 +441,7 @@ public class library {
 
 	}
 
-	//will submit a form based on an element
+	// will submit a form based on an element
 	public void submitElement(String by, String element, int timeOut) {
 		try {
 			waitForElement(timeOut, by, element);
@@ -410,7 +455,7 @@ public class library {
 
 	}
 
-	//sets a drop down field based on a text
+	// sets a drop down field based on a text
 	public void setDropDownText(String by, String element, String text,
 			int timeOut) {
 
@@ -419,8 +464,8 @@ public class library {
 			new Select(driver.findElement(getBy(by, element)))
 					.selectByVisibleText(text);
 			waitForElement(timeOut, by, element);
-			takeScreen("setDropDownText: " + by + "_"
-					+ element + "_" + text, true);
+			takeScreen("setDropDownText: " + by + "_" + element + "_" + text,
+					true);
 			step++;
 
 		} catch (Exception ex) {
@@ -429,7 +474,7 @@ public class library {
 
 	}
 
-	//sets drop down field based on value
+	// sets drop down field based on value
 	public void setDropDownValue(String by, String element, String text,
 			int timeOut) {
 
@@ -438,15 +483,15 @@ public class library {
 			new Select(driver.findElement(getBy(by, element)))
 					.selectByValue(text);
 			waitForElement(timeOut, by, element);
-			takeScreen("setDropDownValue: " + by + "_"
-					+ element + "_" + text, true);
+			takeScreen("setDropDownValue: " + by + "_" + element + "_" + text,
+					true);
 			step++;
 		} catch (Exception ex) {
 
 		}
 	}
 
-	//gets windows size of desktop browser
+	// gets windows size of desktop browser
 	public String getWindowSize() {
 
 		try {
@@ -458,7 +503,7 @@ public class library {
 		return driver.manage().window().getSize().toString();
 	}
 
-	//gets windows position of desktop browser
+	// gets windows position of desktop browser
 	public String getWindowPosition() {
 
 		try {
@@ -470,7 +515,7 @@ public class library {
 		return driver.manage().window().getPosition().toString();
 	}
 
-	//gets maximizes window of desktop browser
+	// gets maximizes window of desktop browser
 	public void maximizeWindow() {
 
 		try {
@@ -482,7 +527,7 @@ public class library {
 		}
 	}
 
-	//sets windows position of desktop browser
+	// sets windows position of desktop browser
 	public void setWindowPosition(int x, int y) {
 
 		try {
@@ -494,7 +539,7 @@ public class library {
 		}
 	}
 
-	//sets windows size of desktop browser
+	// sets windows size of desktop browser
 	public void setWindowSize(int x, int y) {
 
 		try {

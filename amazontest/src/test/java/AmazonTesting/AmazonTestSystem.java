@@ -23,15 +23,14 @@ public class AmazonTestSystem {
 	private searchResults searchResultsPage;
 	private cartFunctions cart;
 
-	@Parameters({ "targetEnvironment" })
+	@Parameters({ "targetEnvironment", "network", "networkLatency" })
 	@BeforeTest
-	public void beforeTest(String targetEnvironment)
+	public void beforeTest(String targetEnvironment, String network, String networkLatency)
 			throws UnsupportedEncodingException, MalformedURLException {
 		// initializes testSetup class
-		tes = new testSetup(targetEnvironment, driver);
+		tes = new testSetup(targetEnvironment, driver, network, networkLatency);
 		// sets up the testNG flows based on testsuite.xml
 		tes.flowControl();
-
 	}
 
 	public void setPagesAndHelpers(library lib)
@@ -44,6 +43,8 @@ public class AmazonTestSystem {
 		searchResultsPage = new searchResults(lib);
 		// sets up the cartFunctions class
 		cart = new cartFunctions(lib);
+		
+		
 	}
 
 	@Test
@@ -51,6 +52,15 @@ public class AmazonTestSystem {
 		// sets the RemoteWebDriver and initial library settings
 		lib = tes.driverAndLibrarySetup();
 		setPagesAndHelpers(lib);
+		
+		//sets Network and latency based on test parameters
+		//network virtualization is per cloud and per device basis
+		//i'm unable to reliably get this working
+		//if(lib.getNetwork().equals("4G"))
+		//{
+			//lib.startNetworkVirtualization("4g_lte_average", lib.getNetworkLatency());
+		//}
+				
 
 		// test start
 		lib.log("orderBookStarted", false);

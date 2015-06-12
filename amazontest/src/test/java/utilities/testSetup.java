@@ -18,10 +18,14 @@ public class testSetup {
 	private DesiredCapabilities capabilities = new DesiredCapabilities();
 	private library lib;
 	private String target;
+	private String network;
+	private String networkLatency;
 
-	public testSetup(String targetEnvironment, RemoteWebDriver driver) {
+	public testSetup(String targetEnvironment, RemoteWebDriver driver, String network, String networkLatency) {
 		this.target = targetEnvironment;
 		this.driver = driver;
+		this.network = network;
+		this.networkLatency=networkLatency;
 	}
 
 	//sets capabilities based on environment returned from testNG
@@ -80,10 +84,20 @@ public class testSetup {
 	public library driverAndLibrarySetup() throws UnsupportedEncodingException,
 			MalformedURLException {
 		if (device) {
+			
 			String host = "partners.perfectomobile.com";
 			String user = URLEncoder.encode("undertow1984@gmail.com", "UTF-8");
 			String password = URLEncoder.encode("perfecto2", "UTF-8");
+			
+			//String host = "mobilecloud.perfectomobile.com";
+			//String user = URLEncoder.encode("jeremyp@perfectomobile.com", "UTF-8");
+			//String password = URLEncoder.encode("Perfecto123", "UTF-8");
 
+			//String host = "vzw.perfectomobile.com";
+			//String user = URLEncoder.encode("jeremyp@perfectomobile.com", "UTF-8");
+			//String password = URLEncoder.encode("JP123!", "UTF-8");
+
+			
 			URL gridURL = new URL("https://" + user + ":" + password + "@"
 					+ host + "/nexperience/wd/hub");
 			SELENIUM_HUB_URL = getConfigurationProperty("SELENIUM_HUB_URL",
@@ -99,7 +113,7 @@ public class testSetup {
 		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
 		driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
 		
-		lib = new library(driver, target, 1);
+		lib = new library(driver, target, 1, network, networkLatency);
 		
 		return lib;
 	}

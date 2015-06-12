@@ -12,7 +12,6 @@
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test>
-
     <test name="Test Internet Explorer">
   <parameter name="targetEnvironment" value="Internet Explorer" />
     <classes>
@@ -46,6 +45,5 @@
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test>
-
   <!-- Test -->
 </suite> <!-- Suite -->

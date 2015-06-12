@@ -17,7 +17,7 @@ public class AmazonTestSystem {
 	private RemoteWebDriver driver;
 	private library lib;
 	private testSetup tes;
-	private chromeHelpers chrome;
+	private androidHelper android;
 	private home homePage;
 	private searchResults searchResultsPage;
 	private cartFunctions cart;
@@ -35,8 +35,8 @@ public class AmazonTestSystem {
 
 	public void setPagesAndHelpers(library lib)
 			throws UnsupportedEncodingException, MalformedURLException {
-		// initializes the chromehelper class
-		chrome = new chromeHelpers(lib);
+		// initializes the androidHelper class
+		android = new androidHelper(lib);
 		// sets up the home page class
 		homePage = new home(lib);
 		// sets up the search results class
@@ -56,8 +56,10 @@ public class AmazonTestSystem {
 		try {
 
 			lib.goToPage("http://amazon.com", "Amazon.com");
+			
+			
 
-			chrome.firstOpenAccepteance(60);
+		   android.chromeFirstOpenAccepteance(60);
 
 			homePage.searchBoxText("Army of darkness volume one", 60);
 
@@ -79,8 +81,42 @@ public class AmazonTestSystem {
 				lib.getDriver().close();
 				lib.downloadReportDisplay(lib.getDriver(), true);
 			} else {
-				lib.getDriver().close();
+				lib.getDriver().close();				
 			}
+			lib.getDriver().quit();
+		}
+	}
+	
+	@Test
+	public void cleanUpCart() throws InterruptedException, IOException {
+		// sets the RemoteWebDriver and initial library settings
+		lib = tes.driverAndLibrarySetup();
+		setPagesAndHelpers(lib);
+
+		// test start
+		lib.log("orderBookStarted", false);
+		try {
+
+			lib.goToPage("http://amazon.com", "Amazon.com");
+			
+		    android.chromeFirstOpenAccepteance(60);
+		    
+		    cart.clickCart();
+		    
+		    cart.deleteFromCart();
+			
+		} catch (Exception ex) {
+			lib.log("Got exception " + ex, true);
+			throw ex;
+		} finally {
+
+			if (lib.isDevice()) {
+				lib.getDriver().close();
+				lib.downloadReportDisplay(lib.getDriver(), true);
+			} else {
+				lib.getDriver().close();				
+			}
+			lib.getDriver().quit();
 		}
 	}
 
@@ -92,8 +128,14 @@ public class AmazonTestSystem {
 		} catch (Exception ex) {
 
 		}
+		
+		try {
+			lib.getDriver().quit();
+		} catch (Exception ex) {
 
-		lib.getDriver().quit();
+		}
+
+		
 	}
 
 }

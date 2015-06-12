@@ -94,7 +94,7 @@ public class AmazonTestSystem {
 		setPagesAndHelpers(lib);
 
 		// test start
-		lib.log("orderBookStarted", false);
+		lib.log("cleanCartStarted", false);
 		try {
 
 			lib.goToPage("http://amazon.com", "Amazon.com");

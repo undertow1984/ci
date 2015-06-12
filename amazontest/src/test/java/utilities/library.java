@@ -259,9 +259,9 @@ public class library {
 			final String ESCAPE_PROPERTY = "org.uncommons.reportng.escape-output";
 			System.setProperty(ESCAPE_PROPERTY, "false");
 			Reporter.log(text.replace("<u><b>||||||", "<u><b>" + target
-					+ "_Step" + step + "_"));
+					+ "_" + getNetwork() + "_Step" + step + "_"));
 		} else {
-			System.out.println(target + "_Step" + step + "_" + text + newLine);
+			System.out.println(target + "_" + getNetwork() + "_Step" + step + "_" + text + newLine);
 		}
 	}
 

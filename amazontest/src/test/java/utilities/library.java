@@ -35,6 +35,7 @@ public class library {
 	private int step = 0;
 	private String network;
 	private String networkLatency;
+	private String testName;
 
 	public library(RemoteWebDriver driver, String target, int step,
 			String network, String networkLatency) {
@@ -47,6 +48,16 @@ public class library {
 
 	public library(RemoteWebDriver driver) {
 		this.driver = driver;
+	}
+
+	public void setTestName(String test)
+	{
+		testName=test;
+	}
+	
+	public String getTestName(String test)
+	{
+		return testName;
 	}
 
 	public String getNetwork() {
@@ -258,10 +269,10 @@ public class library {
 		if (addReport) {
 			final String ESCAPE_PROPERTY = "org.uncommons.reportng.escape-output";
 			System.setProperty(ESCAPE_PROPERTY, "false");
-			Reporter.log(text.replace("<u><b>||||||", "<u><b>" + target
+			Reporter.log(text.replace("<u><b>||||||", "<u><b>" + testName + "_" + target
 					+ "_" + getNetwork() + "_Step" + step + "_"));
 		} else {
-			System.out.println(target + "_" + getNetwork() + "_Step" + step + "_" + text + newLine);
+			System.out.println(testName + "_" + target + "_" + getNetwork() + "_Step" + step + "_" + text + newLine);
 		}
 	}
 

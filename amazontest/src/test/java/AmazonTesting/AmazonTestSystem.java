@@ -1,11 +1,13 @@
 package AmazonTesting;
 
+import java.lang.reflect.Method;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeTest;
@@ -22,6 +24,7 @@ public class AmazonTestSystem {
 	private home homePage;
 	private searchResults searchResultsPage;
 	private cartFunctions cart;
+	private String testName;
 
 	@Parameters({ "targetEnvironment", "network", "networkLatency" })
 	@BeforeTest
@@ -43,7 +46,14 @@ public class AmazonTestSystem {
 		searchResultsPage = new searchResults(lib);
 		// sets up the cartFunctions class
 		cart = new cartFunctions(lib);
-		
+		lib.setTestName(testName);
+		lib.log("testStarted", false);
+	}
+	
+	@BeforeMethod
+	public void getTestMethod(Method method)
+	{
+		testName = method.getName(); 
 		
 	}
 
@@ -61,9 +71,6 @@ public class AmazonTestSystem {
 			//lib.startNetworkVirtualization("4g_lte_average", lib.getNetworkLatency());
 		//}
 				
-
-		// test start
-		lib.log("orderBookStarted", false);
 		try {
 						
 			lib.log("Going to amazon.com",false);
@@ -102,14 +109,20 @@ public class AmazonTestSystem {
 		}
 	}
 	
-	@Test
+	@Test(dependsOnMethods = { "OrderBook" })
 	public void cleanUpCart() throws InterruptedException, IOException {
 		// sets the RemoteWebDriver and initial library settings
 		lib = tes.driverAndLibrarySetup();
 		setPagesAndHelpers(lib);
+		
+		//sets Network and latency based on test parameters
+				//network virtualization is per cloud and per device basis
+				//i'm unable to reliably get this working
+				//if(lib.getNetwork().equals("4G"))
+				//{
+					//lib.startNetworkVirtualization("4g_lte_average", lib.getNetworkLatency());
+				//}
 
-		// test start
-		lib.log("cleanCartStarted", false);
 		try {
 
 			lib.log("Going to amazon.com", false);

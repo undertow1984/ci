@@ -14,8 +14,7 @@
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test>
-  
-    <!-- 
+
     <test name="Test Internet Explorer">
   <parameter name="targetEnvironment" value="Internet Explorer" />
   <parameter name="network" value="" />
@@ -59,20 +58,7 @@
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test>
-  -->
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+   
      <test name="Test Galaxy S5 WIFI">
   <parameter name="targetEnvironment" value="Galaxy S5" />
   <parameter name="network" value="WIFI" />
@@ -81,7 +67,7 @@
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test>
-  <!-- 
+
   <test name="Test Galaxy Tab WIFI">
   <parameter name="targetEnvironment" value="Galaxy Tab" />
  <parameter name="network" value="WIFI" />
@@ -99,7 +85,7 @@
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test>  
-  -->
+
 
   <!-- Test -->
 </suite> <!-- Suite -->

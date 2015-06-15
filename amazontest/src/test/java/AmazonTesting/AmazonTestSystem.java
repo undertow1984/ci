@@ -37,7 +37,7 @@ public class AmazonTestSystem {
 	}
 
 	public void setPagesAndHelpers(library lib)
-			throws UnsupportedEncodingException, MalformedURLException {
+			throws IOException {
 		// initializes the androidHelper class
 		android = new androidHelper(lib);
 		// sets up the home page class
@@ -48,6 +48,7 @@ public class AmazonTestSystem {
 		cart = new cartFunctions(lib);
 		lib.setTestName(testName);
 		lib.log("testStarted", false);
+		lib.loadPropertyFile("_elements.properties");
 	}
 	
 	@BeforeMethod

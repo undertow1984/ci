@@ -1,6 +1,8 @@
 package pages;
 
 import utilities.*;
+import utilities.library.byFields;
+import utilities.library.prop;
 
 public class cartFunctions {
 	private library lib;
@@ -11,30 +13,30 @@ public class cartFunctions {
 
 	//page level - add item to cart
 	public void addToCart(int wait) {
-		lib.clickElement("xpath", "//*[@id='add-to-cart-button']", wait);
+		lib.clickElement(byFields.xpath, lib.getProp(prop.addToCart), wait);
 
 	}
 
 	//page level proceed to checkout
 	public void proceedToCheckout(int wait) {
 		lib.clickElement(
-				"xpath",
-				"(//*[@id='a-autoid-0-announce' or @id='hlb-ptc-btn-native'])[1]",
+				byFields.xpath,
+				lib.getProp(prop.proceedToCheckOut),
 				wait);
 	}
 	
 	//click the cart icon
 	public void clickCart()
 	{
-		lib.clickElement("xpath","//*[@id='nav-button-cart' or @id='nav-cart']",60);
+		lib.clickElement(byFields.xpath,lib.getProp(prop.cartIcon),60);
 	}
 	
 	//click the first delete button for cart items
 	public void deleteFromCart()
 	{
-		while(lib.elementExists("xpath", "//input[@value='Delete'][1]"))
+		while(lib.elementExists(byFields.xpath, lib.getProp(prop.deleteFromCart)))
 		{
-			lib.clickElement("xpath","//input[@value='Delete'][1]",60);
+			lib.clickElement(byFields.xpath,lib.getProp(prop.deleteFromCart),60);
 		}
 	
 	}

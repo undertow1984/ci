@@ -3,7 +3,11 @@ package pages;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.openqa.selenium.By;
+
 import utilities.*;
+import utilities.library.availableContexts;
+import utilities.library.byFields;
 
 public class androidHelper {
 	private library lib;
@@ -20,29 +24,54 @@ public class androidHelper {
 		if (lib.getDriver().getCapabilities().getCapability("platform")
 				.equals("Android"))			
 		  {
-			lib.switchToContext("VISUAL");
-			  if (lib.elementExists("partialLinkText", "Accept"))
+			lib.switchToContext(availableContexts.VISUAL);
+			  if (lib.elementExists(byFields.partialLinkText, "Accept"))
 			  {
-				  lib.clickElement("partialLinkText", "Accept", wait);
+				  lib.clickElement(byFields.partialLinkText, "Accept", wait);
 			  }
 			  
-			  if (lib.elementExists("partialLinkText", "NO THANKS"))
+			  if (lib.elementExists(byFields.partialLinkText, "NO THANKS"))
 			  {
-				  lib.clickElement("partialLinkText", "NO THANKS", wait);
+				  lib.clickElement(byFields.partialLinkText, "NO THANKS", wait);
 			  }
 			  
-			  lib.switchToContext("WEBVIEW");
+			  lib.switchToContext(availableContexts.WEBVIEW);
 		  }
 		}
 	
 	// this needs to be further expanded out to support all available methods
 	//this is not used and just here for future purposes
-	public void networkSettings(String wifi, String data, String airplane) {
-		String command = "mobile:networksettings:set";
+	public void networkSettings(Boolean wifi, Boolean data, Boolean airplane) {
+		String command = "mobile:network.settings:set";
 		Map<String, Object> params = new HashMap<>();
-		params.put("WiFi", "disabled");
-		params.put("Data", "disabled");
-		params.put("Airplane mode", "disabled");
+		if(wifi)
+		{
+			params.put("WiFi", "enabled");
+		}
+		else
+		{
+			params.put("WiFi", "disabled");
+		}			
+		if(data)
+		{
+			params.put("Data", "enabled");
+		}
+		else
+		{
+			params.put("Data", "disabled");
+		}		
+		if(airplane)
+		{
+			params.put("Airplane mode", "enabled");
+		}
+		else
+		{			
+			params.put("Airplane mode", "disabled");
+		}
+			
+		
+		
+		
 		lib.getDriver().executeScript(command, params);
 	}
 }

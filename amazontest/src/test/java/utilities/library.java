@@ -2,14 +2,19 @@ package utilities;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -36,6 +41,20 @@ public class library {
 	private String network;
 	private String networkLatency;
 	private String testName;
+	
+	private Properties properties = new Properties();
+	
+	public enum byFields {
+		id,name,css,tag,className,linkText,partialLinkText,xpath
+	}
+	
+	public enum availableContexts {
+		WEBVIEW, NATIVE_APP, VISUAL
+	}
+	
+	public enum prop {
+		searchBox,addToCart,proceedToCheckOut,cartIcon,deleteFromCart
+	}
 
 	public library(RemoteWebDriver driver, String target, int step,
 			String network, String networkLatency) {
@@ -49,21 +68,37 @@ public class library {
 	public library(RemoteWebDriver driver) {
 		this.driver = driver;
 	}
+	
+	//read in Properties
+	public void loadPropertyFile(String fileName) throws IOException
+	{
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName);
+		properties.load(inputStream);
+	}
+	
+	public String getProp(prop propName)
+	{
+		return properties.getProperty(propName.toString());
+	}
 
+	//used by testNG beforeMethod to set the testName
 	public void setTestName(String test)
 	{
 		testName=test;
 	}
 	
-	public String getTestName(String test)
+	//returns the testName
+	public String getTestName()
 	{
 		return testName;
 	}
 
+	//gets the Network
 	public String getNetwork() {
 		return network;
 	}
 
+	//gets the network latency
 	public String getNetworkLatency() {
 		return networkLatency;
 	}
@@ -138,13 +173,13 @@ public class library {
 	// switch driver method
 	// switches dom between native and web and visual
 	// "WEBVIEW", "NATIVE_APP" or "VISUAL"
-	public RemoteWebDriver switchToContext(String context) {
+	public RemoteWebDriver switchToContext(availableContexts context) {
 
 		log("switchContext: " + context, false);
 
 		RemoteExecuteMethod executeMethod = new RemoteExecuteMethod(driver);
 		Map<String, String> params = new HashMap<>();
-		params.put("name", context);
+		params.put("name", context.toString());
 		executeMethod.execute(DriverCommand.SWITCH_TO_CONTEXT, params);
 		return driver;
 	}
@@ -184,22 +219,22 @@ public class library {
 	}
 
 	// will return the appropriate by object based on string
-	public By getBy(String by, String element) {
-		if (by == "id") {
+	public By getBy(byFields by, String element) {
+		if (by == byFields.id) {
 			return By.id(element);
-		} else if (by == "name") {
+		} else if (by == byFields.name) {
 			return By.name(element);
-		} else if (by == "css") {
+		} else if (by == byFields.css) {
 			return By.cssSelector(element);
-		} else if (by == "tag") {
+		} else if (by == byFields.tag) {
 			return By.tagName(element);
-		} else if (by == "class") {
+		} else if (by == byFields.className) {
 			return By.className(element);
-		} else if (by == "linkText") {
+		} else if (by == byFields.linkText) {
 			return By.linkText(element);
-		} else if (by == "partialLinkText") {
+		} else if (by == byFields.partialLinkText) {
 			return By.partialLinkText(element);
-		} else if (by == "xpath") {
+		} else if (by == byFields.xpath) {
 			return By.xpath(element);
 		} else {
 			return By.id("");
@@ -238,7 +273,7 @@ public class library {
 					"dd_MMM_yyyy__hh_mm_ssaa");
 			String destDir = "./surefire-reports/html/screenshots/";
 			new File(destDir).mkdirs();
-			String destFile = target + "_Step" + step + "_"
+			String destFile = testName + "_" + target + "_" + getNetwork() + "_Step" + step + "_"
 					+ dateFormat.format(new Date()) + ".png";
 
 			// copy screen shot to directory
@@ -352,7 +387,7 @@ public class library {
 
 	// will attempt to wait on the page to load and searches for the element
 	// supplied
-	public void waitForElement(int seconds, String by, String element) {
+	public void waitForElement(int seconds, byFields by, String element) {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, seconds);
 			wait.until(ExpectedConditions.elementToBeClickable(getBy(by,
@@ -362,7 +397,7 @@ public class library {
 	}
 
 	// returns an element
-	public WebElement getElement(String by, String element) {
+	public WebElement getElement(byFields by, String element) {
 
 		try {
 			driver.findElement(getBy(by, element));
@@ -374,7 +409,7 @@ public class library {
 	}
 
 	// checks if element exists
-	public Boolean elementExists(String by, String element) {
+	public Boolean elementExists(byFields by, String element) {
 
 		try {
 			driver.findElement(getBy(by, element));
@@ -386,7 +421,7 @@ public class library {
 	}
 
 	// clears text field
-	public void clearText(String by, String element, int timeOut) {
+	public void clearText(byFields by, String element, int timeOut) {
 		try {
 			waitForElement(timeOut, by, element);
 			driver.findElement(getBy(by, element)).clear();
@@ -400,7 +435,7 @@ public class library {
 
 	// sets text field value and will clear the field prior to writing based on
 	// the clear boolean
-	public void setText(String by, String element, String data, Boolean clear,
+	public void setText(byFields by, String element, String data, Boolean clear,
 			int timeOut) {
 		try {
 			waitForElement(timeOut, by, element);
@@ -418,7 +453,7 @@ public class library {
 	}
 
 	// gets the text of an element
-	public String getText(String by, String element, int timeOut) {
+	public String getText(byFields by, String element, int timeOut) {
 
 		try {
 			waitForElement(timeOut, by, element);
@@ -430,7 +465,7 @@ public class library {
 	}
 
 	// gets the value of an element
-	public String getValue(String by, String element, int timeOut) {
+	public String getValue(byFields by, String element, int timeOut) {
 
 		try {
 			waitForElement(timeOut, by, element);
@@ -442,7 +477,7 @@ public class library {
 	}
 
 	// clicks and element
-	public void clickElement(String by, String element, int timeOut) {
+	public void clickElement(byFields by, String element, int timeOut) {
 
 		waitForElement(timeOut, by, element);
 		driver.findElement(getBy(by, element)).click();
@@ -453,7 +488,7 @@ public class library {
 	}
 
 	// will submit a form based on an element
-	public void submitElement(String by, String element, int timeOut) {
+	public void submitElement(byFields by, String element, int timeOut) {
 		try {
 			waitForElement(timeOut, by, element);
 			driver.findElement(getBy(by, element)).submit();
@@ -467,7 +502,7 @@ public class library {
 	}
 
 	// sets a drop down field based on a text
-	public void setDropDownText(String by, String element, String text,
+	public void setDropDownText(byFields by, String element, String text,
 			int timeOut) {
 
 		try {
@@ -486,7 +521,7 @@ public class library {
 	}
 
 	// sets drop down field based on value
-	public void setDropDownValue(String by, String element, String text,
+	public void setDropDownValue(byFields by, String element, String text,
 			int timeOut) {
 
 		try {

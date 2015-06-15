@@ -1,6 +1,8 @@
 package pages;
 
 import utilities.*;
+import utilities.library.byFields;
+import utilities.library.prop;
 
 public class home {
 	private library lib;
@@ -12,8 +14,8 @@ public class home {
 	//enter text in search box
 	public void searchBoxText(String searchbox, int wait) {
 		lib.setText(
-				"xpath",
-				"(//input[@id='nav-search-keywords' or @id='twotabsearchtextbox'] )[1]",
+				byFields.xpath,
+				lib.getProp(prop.searchBox),
 				searchbox, true, wait);
 
 	}
@@ -21,8 +23,8 @@ public class home {
 	//submit the search box value
 	public void searchBoxSubmit(int wait) {
 		lib.submitElement(
-				"xpath",
-				"(//input[@id='nav-search-keywords'  or @id='twotabsearchtextbox'])[1]",
+				byFields.xpath,
+				lib.getProp(prop.searchBox),
 				wait);
 	}
 

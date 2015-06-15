@@ -23,7 +23,7 @@
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test>
-<!-- 
+
   <test name="Test Galaxy Tab 4G">
   <parameter name="targetEnvironment" value="Galaxy Tab" />
   <parameter name="network" value="4G" />
@@ -86,6 +86,5 @@
     </classes>
   </test>  
 
- -->
   <!-- Test -->
 </suite> <!-- Suite -->

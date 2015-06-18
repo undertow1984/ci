@@ -32,11 +32,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.Reporter;
 
+import com.perfectomobile.httpclient.MediaType;
 import com.perfectomobile.httpclient.utils.FileUtils;
 import com.perfectomobile.selenium.MobileDriver;
 import com.perfectomobile.selenium.api.IMobileDevice;
 import com.perfectomobile.selenium.api.IMobileDriver;
 import com.perfectomobile.selenium.api.IMobileWebDriver;
+import com.perfectomobile.selenium.options.MobileBrowserType;
 
 public class library {
 	private Object driver;
@@ -51,6 +53,7 @@ public class library {
 	private Boolean selenium = false;
 	private Boolean device = false;
 	private mobileDrivers currentMobile;
+	private MobileBrowserType localBrowser;
 
 	public enum seleniumD {
 		True
@@ -111,7 +114,8 @@ public class library {
 
 	public library(MobileDriver driver, String target, int step,
 			String network, String networkLatency, Boolean local,
-			Boolean device, IMobileDevice foundDevice) {
+			Boolean device, IMobileDevice foundDevice,
+			MobileBrowserType localBrowser) {
 		this.target = target;
 		this.step = step;
 		this.network = network;
@@ -120,6 +124,7 @@ public class library {
 		this.device = device;
 		this.foundDevice = foundDevice;
 		this.local = local;
+		this.localBrowser = localBrowser;
 	}
 
 	public library(WebDriver driver, String target, int step, String network,
@@ -139,7 +144,7 @@ public class library {
 	public IMobileWebDriver getDriver(mobileD a, mobileDrivers md) {
 		if (md.equals(mobileDrivers.domDriver)) {
 			return ((MobileDriver) driver).getDevice(foundDevice.getDeviceId())
-					.getDOMDriver();
+					.getDOMDriver(localBrowser);
 		} else if (md.equals(mobileDrivers.nativeDriver)) {
 			return ((MobileDriver) driver).getDevice(foundDevice.getDeviceId())
 					.getNativeDriver();
@@ -353,10 +358,14 @@ public class library {
 
 	// opens application
 	public void openApplication(String application) {
-		String command = "mobile:application.close";
-		Map<String, Object> params = new HashMap<>();
-		params.put("name", application);
-		getDriver(remoteD.True).executeScript(command, params);
+		if (getLocal()) {
+			setCurrentMobileDriver(mobileDrivers.nativeDriver);
+		} else {
+			String command = "mobile:application.close";
+			Map<String, Object> params = new HashMap<>();
+			params.put("name", application);
+			getDriver(remoteD.True).executeScript(command, params);
+		}
 	}
 
 	// takes screen shot of non-device platforms
@@ -391,6 +400,17 @@ public class library {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
+			String fileCopyLocation="./test-output/html/screenshots/";
+						
+			new File(fileCopyLocation).mkdirs();
+			
+			try {
+				FileUtils.copyFile(scrFile, new File(fileCopyLocation + "/" + destFile));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			log("screenShot: " + destDir + "/" + destFile, false);
 			// Display screenshot to ReportNG
@@ -423,45 +443,85 @@ public class library {
 
 	// Calls downloadreport, copys the perfecto report to the screen directory
 	// boolean will add the report to the testNG report
-	public void downloadReportDisplay(RemoteWebDriver driver, Boolean addReport)
-			throws IOException {
+	public void downloadReportDisplay(Boolean addReport) throws IOException {
 
-		// set file format and destination for report
-		DateFormat dateFormat = new SimpleDateFormat("dd_MMM_yyyy__hh_mm_ssaa");
-		String destDir = "./surefire-reports/html/screenshots/";
-		new File(destDir).mkdirs();
-		String destFile = dateFormat.format(new Date());
+		if (isDevice()) {
+			// set file format and destination for report
+			DateFormat dateFormat = new SimpleDateFormat(
+					"dd_MMM_yyyy__hh_mm_ssaa");
+			String destDir = "./surefire-reports/html/screenshots/";
+			new File(destDir).mkdirs();
+			String destFile = dateFormat.format(new Date());
 
-		// download report from driver
-		downloadReport(driver, "pdf", destDir + "/" + destFile);
+			// download report
+			downloadReport("pdf", destDir , destFile);
+			// Display screenshot to ReportNG
+			String userDirector = "./screenshots/";
 
-		// Display screenshot to ReportNG
-		String userDirector = "./screenshots/";
+			String destFileNew = destFile + ".pdf";
 
-		String destFileNew = destFile + ".pdf";
-
-		log("perfectoReport: " + userDirector + destFileNew, false);
-		if (addReport) {
-			log("<a href=\"" + userDirector + destFileNew
-					+ "\">Perfecto Report</a><br />", addReport);
+			log("perfectoReport: " + userDirector + destFileNew, false);
+			if (addReport) {
+				log("<a href=\"" + userDirector + destFileNew
+						+ "\">Perfecto Report</a><br />", addReport);
+			}
 		}
 	}
 
 	// download report from perfecto
-	private void downloadReport(RemoteWebDriver driver, String type,
-			String fileName) throws IOException {
-		// downloads report from perfecto
-		String command = "mobile:report:download";
-		Map<String, Object> params = new HashMap<>();
-		params.put("type", type);
-		String report = (String) driver.executeScript(command, params);
-		File reportFile = new File(fileName + "." + type);
-		BufferedOutputStream output = new BufferedOutputStream(
-				new FileOutputStream(reportFile));
-		byte[] reportBytes = OutputType.BYTES.convertFromBase64Png(report);
-		output.write(reportBytes);
-		output.close();
-
+	private void downloadReport(String type, String fileLocation, String file)
+			throws IOException {
+		if (isDevice()) {
+			
+			if (getLocal()) {
+				InputStream report = ((MobileDriver)driver).downloadReport(MediaType.PDF);
+					
+				File reportFile = new File(fileLocation + file + "." + type);
+				
+				FileUtils.write(report, reportFile);
+				
+				String fileCopyLocation="./test-output/html/screenshots/";
+				
+				File reportFileCopy = new File(fileCopyLocation + file + "." + type);
+				
+				
+				
+				new File(fileCopyLocation).mkdirs();
+				
+				FileUtils.copyFile(reportFile, reportFileCopy);
+			} else {
+				// downloads report from perfecto
+				String command = "mobile:report:download";
+				Map<String, Object> params = new HashMap<>();
+				params.put("type", type);
+				String report;
+				
+					report = (String) getDriver(remoteD.True).executeScript(
+							command, params);
+					
+				
+				File reportFile = new File(fileLocation + "/" + file + "." + type);
+				BufferedOutputStream output = new BufferedOutputStream(
+						new FileOutputStream(reportFile));
+				byte[] reportBytes = OutputType.BYTES
+						.convertFromBase64Png(report);
+				output.write(reportBytes);
+				output.close();
+				
+				
+				
+				String fileCopyLocation="./test-output/html/screenshots/";
+				
+				File reportFileCopy = new File(fileCopyLocation + file + "." + type);
+				
+				
+				
+				new File(fileCopyLocation).mkdirs();
+				
+				FileUtils.copyFile(reportFile, reportFileCopy);
+			}
+			
+		}
 	}
 
 	// sets the initial page for the browser
@@ -470,7 +530,7 @@ public class library {
 		if (selenium)
 			getDriver(seleniumD.True).get(url);
 		else if (local)
-			getDriver(mobileD.True, currentMobile);
+			getDriver(mobileD.True, currentMobile).get(url);
 		else
 			getDriver(remoteD.True).get(url);
 		waitForTitle(10, title);
@@ -478,25 +538,63 @@ public class library {
 		step++;
 	}
 
-	public void testCleanUpWithReport() throws IOException {
+	public void testCleanUpWithReport() {
 		if (selenium) {
-			if (isDevice()) {
-				getDriver(seleniumD.True).close();
-			} else {
-				getDriver(seleniumD.True).close();
+			try {
+				if (isDevice()) {
+					getDriver(seleniumD.True).close();
+				} else {
+					getDriver(seleniumD.True).close();
+				}
+			} catch (Exception ex) {
+
 			}
-			getDriver(seleniumD.True).quit();
+			try {
+				getDriver(seleniumD.True).quit();
+			} catch (Exception ex) {
+
+			}
 		} else if (local) {
-			getDevice().close();
-			((MobileDriver) driver).quit();
+			try {
+				getDevice().close();
+			} catch (Exception ex) {
+
+			}
+			try {
+				((MobileDriver) driver).quit();
+			} catch (Exception ex) {
+
+			}
+			try {
+				downloadReportDisplay(true);
+			} catch (Exception ex) {
+
+			}
+			
 		} else {
 			if (isDevice()) {
-				getDriver(remoteD.True).close();
-				downloadReportDisplay(getDriver(remoteD.True), true);
+				try {
+					getDriver(remoteD.True).close();
+				} catch (Exception ex) {
+
+				}
+				try {
+					downloadReportDisplay(true);
+				} catch (Exception ex) {
+
+				}
 			} else {
-				getDriver(remoteD.True).close();
+				try {
+					getDriver(remoteD.True).close();
+				} catch (Exception ex) {
+
+				}
 			}
-			getDriver(remoteD.True).quit();
+			try {
+				getDriver(remoteD.True).quit();
+			} catch (Exception ex) {
+
+			}
 		}
 	}
 
@@ -515,8 +613,16 @@ public class library {
 			}
 
 		} else if (local) {
-			getDevice().close();
-			((MobileDriver) driver).quit();
+			try {
+				getDevice().close();
+			} catch (Exception ex) {
+
+			}
+			try {
+				((MobileDriver) driver).quit();
+			} catch (Exception ex) {
+			}
+
 		} else {
 			try {
 				getDriver(remoteD.True).close();
@@ -538,7 +644,9 @@ public class library {
 		String url = "can't find url";
 		try {
 			url = (selenium) ? getDriver(seleniumD.True).getCurrentUrl()
-					: getDriver(remoteD.True).getCurrentUrl();
+					: (local) ? getDriver(mobileD.True, currentMobile)
+							.getCurrentUrl() : getDriver(remoteD.True)
+							.getCurrentUrl();
 		} catch (Exception ex) {
 
 		}
@@ -551,8 +659,10 @@ public class library {
 
 		try {
 			WebDriverWait wait = (selenium) ? new WebDriverWait(
-					getDriver(seleniumD.True), seconds) : new WebDriverWait(
-					getDriver(remoteD.True), seconds);
+					getDriver(seleniumD.True), seconds)
+					: (local) ? new WebDriverWait(getDriver(mobileD.True,
+							currentMobile), seconds) : new WebDriverWait(
+							getDriver(remoteD.True), seconds);
 			wait.until(ExpectedConditions.titleContains(title));
 		} catch (Exception ex) {
 
@@ -564,8 +674,10 @@ public class library {
 	public void waitForElement(int seconds, byFields by, String element) {
 		try {
 			WebDriverWait wait = (selenium) ? new WebDriverWait(
-					getDriver(seleniumD.True), seconds) : new WebDriverWait(
-					getDriver(remoteD.True), seconds);
+					getDriver(seleniumD.True), seconds)
+					: (local) ? new WebDriverWait(getDriver(mobileD.True,
+							currentMobile), seconds) : new WebDriverWait(
+							getDriver(remoteD.True), seconds);
 			wait.until(ExpectedConditions.elementToBeClickable(getBy(by,
 					element)));
 		} catch (Exception ex) {
@@ -576,8 +688,9 @@ public class library {
 	public WebElement getElement(byFields by, String element) {
 
 		return (selenium) ? getDriver(seleniumD.True).findElement(
-				getBy(by, element)) : getDriver(remoteD.True).findElement(
-				getBy(by, element));
+				getBy(by, element)) : (local) ? getDriver(mobileD.True,
+				currentMobile).findElement(getBy(by, element)) : getDriver(
+				remoteD.True).findElement(getBy(by, element));
 	}
 
 	// checks if element exists
@@ -586,6 +699,9 @@ public class library {
 		try {
 			if (selenium)
 				getDriver(seleniumD.True).findElement(getBy(by, element));
+			else if (local)
+				getDriver(mobileD.True, currentMobile).findElement(
+						getBy(by, element));
 			else
 				getDriver(remoteD.True).findElement(getBy(by, element));
 			return true;
@@ -602,6 +718,9 @@ public class library {
 			if (selenium)
 				getDriver(seleniumD.True).findElement(getBy(by, element))
 						.clear();
+			else if (local)
+				getDriver(mobileD.True, currentMobile).findElement(
+						getBy(by, element)).clear();
 			else
 				getDriver(remoteD.True).findElement(getBy(by, element)).clear();
 			takeScreen("clearText: " + "_" + by + "_" + element, true);
@@ -624,6 +743,9 @@ public class library {
 			if (selenium)
 				getDriver(seleniumD.True).findElement(getBy(by, element))
 						.sendKeys(data);
+			else if (local)
+				getDriver(mobileD.True, currentMobile).findElement(
+						getBy(by, element)).sendKeys(data);
 			else
 				getDriver(remoteD.True).findElement(getBy(by, element))
 						.sendKeys(data);
@@ -643,8 +765,11 @@ public class library {
 
 		return (selenium) ? getDriver(seleniumD.True)
 				.findElement(getBy(by, element)).getText().toString()
-				: getDriver(remoteD.True).findElement(getBy(by, element))
-						.getText().toString();
+				: (local) ? getDriver(mobileD.True, currentMobile)
+						.findElement(getBy(by, element)).getText().toString()
+						: getDriver(remoteD.True)
+								.findElement(getBy(by, element)).getText()
+								.toString();
 	}
 
 	// gets the value of an element
@@ -652,9 +777,11 @@ public class library {
 
 		waitForElement(timeOut, by, element);
 		return (selenium) ? getDriver(seleniumD.True).findElement(
-				getBy(by, element)).getAttribute("value") : getDriver(
-				remoteD.True).findElement(getBy(by, element)).getAttribute(
-				"value");
+				getBy(by, element)).getAttribute("value")
+				: (local) ? getDriver(mobileD.True, currentMobile).findElement(
+						getBy(by, element)).getAttribute("value") : getDriver(
+						remoteD.True).findElement(getBy(by, element))
+						.getAttribute("value");
 	}
 
 	// clicks and element
@@ -664,6 +791,8 @@ public class library {
 		if (selenium) {
 			getDriver(seleniumD.True).findElement(getBy(by, element)).click();
 		} else if (local) {
+			getDriver(mobileD.True, currentMobile).findElement(
+					getBy(by, element)).click();
 		} else {
 			getDriver(remoteD.True).findElement(getBy(by, element)).click();
 		}
@@ -680,6 +809,9 @@ public class library {
 			if (selenium)
 				getDriver(seleniumD.True).findElement(getBy(by, element))
 						.submit();
+			else if (local)
+				getDriver(mobileD.True, currentMobile).findElement(
+						getBy(by, element)).submit();
 			else
 				getDriver(remoteD.True).findElement(getBy(by, element))
 						.submit();
@@ -700,6 +832,9 @@ public class library {
 			waitForElement(timeOut, by, element);
 			if (selenium)
 				new Select(getDriver(seleniumD.True).findElement(
+						getBy(by, element))).selectByVisibleText(text);
+			else if (local)
+				new Select(getDriver(mobileD.True, currentMobile).findElement(
 						getBy(by, element))).selectByVisibleText(text);
 			else
 				new Select(getDriver(remoteD.True).findElement(
@@ -725,6 +860,9 @@ public class library {
 			if (selenium)
 				new Select(getDriver(seleniumD.True).findElement(
 						getBy(by, element))).selectByValue(text);
+			else if (local)
+				new Select(getDriver(mobileD.True, currentMobile).findElement(
+						getBy(by, element))).selectByValue(text);
 			else
 				new Select(getDriver(remoteD.True).findElement(
 						getBy(by, element))).selectByValue(text);
@@ -737,19 +875,46 @@ public class library {
 		}
 	}
 
+	// sets drop down field based on value
+	public void setDropDownIndex(byFields by, String element, int i, int timeOut) {
+
+		try {
+			waitForElement(timeOut, by, element);
+			if (selenium)
+				new Select(getDriver(seleniumD.True).findElement(
+						getBy(by, element))).selectByIndex(i);
+			else if (local)
+				new Select(getDriver(mobileD.True, currentMobile).findElement(
+						getBy(by, element))).selectByIndex(i);
+			else
+				new Select(getDriver(remoteD.True).findElement(
+						getBy(by, element))).selectByIndex(i);
+			waitForElement(timeOut, by, element);
+			takeScreen("setDropDownIndex: " + by + "_" + element + "_" + i,
+					true);
+			step++;
+		} catch (Exception ex) {
+
+		}
+	}
+
 	// gets windows size of desktop browser
 	public String getWindowSize() {
 		return (selenium) ? getDriver(seleniumD.True).manage().window()
-				.getSize().toString() : getDriver(remoteD.True).manage()
-				.window().getSize().toString();
+				.getSize().toString() : (local) ? getDriver(mobileD.True,
+				currentMobile).manage().window().getSize().toString()
+				: getDriver(remoteD.True).manage().window().getSize()
+						.toString();
 	}
 
 	// gets windows position of desktop browser
 	public String getWindowPosition() {
 
 		return (selenium) ? getDriver(seleniumD.True).manage().window()
-				.getPosition().toString() : getDriver(remoteD.True).manage()
-				.window().getPosition().toString();
+				.getPosition().toString() : (local) ? getDriver(mobileD.True,
+				currentMobile).manage().window().getPosition().toString()
+				: getDriver(remoteD.True).manage().window().getPosition()
+						.toString();
 
 	}
 
@@ -759,6 +924,9 @@ public class library {
 		try {
 			if (selenium)
 				getDriver(seleniumD.True).manage().window().maximize();
+			else if (local)
+				getDriver(mobileD.True, currentMobile).manage().window()
+						.maximize();
 			else
 				getDriver(remoteD.True).manage().window().maximize();
 			takeScreen("maximizeWindow", true);
@@ -774,6 +942,9 @@ public class library {
 		try {
 			if (selenium)
 				getDriver(seleniumD.True).manage().window()
+						.setPosition(new Point(x, y));
+			else if (local)
+				getDriver(mobileD.True, currentMobile).manage().window()
 						.setPosition(new Point(x, y));
 			else
 				getDriver(remoteD.True).manage().window()
@@ -792,6 +963,9 @@ public class library {
 			if (selenium)
 				getDriver(seleniumD.True).manage().window()
 						.setSize(new Dimension(x, y));
+			else if (local)
+				getDriver(mobileD.True, currentMobile).manage().window()
+						.setSize(new Dimension(x, y));
 			else
 				getDriver(remoteD.True).manage().window()
 						.setSize(new Dimension(x, y));
@@ -805,6 +979,9 @@ public class library {
 	public void switchToFrame(Object find) {
 		if (selenium)
 			getDriver(seleniumD.True).switchTo().frame((WebElement) find);
+		else if (local)
+			getDriver(mobileD.True, currentMobile).switchTo().frame(
+					(WebElement) find);
 		else
 			getDriver(remoteD.True).switchTo().frame((WebElement) find);
 	}

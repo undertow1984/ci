@@ -32,6 +32,7 @@ import utilities.*;
 import utilities.library.availableContexts;
 import utilities.library.byFields;
 import utilities.library.mobileD;
+import utilities.library.mobileDrivers;
 import utilities.library.remoteD;
 import utilities.library.seleniumD;
 
@@ -40,13 +41,14 @@ public class testSystem {
 	private WebDriver wdriver;
 	private MobileDriver mdriver;
 	private library lib;
-	private testSetup tes;
-	private androidHelper android;
-	private String testName;
-	private home homePage;
-	private resultsPage results;
+	private testSetup tes;	
+	private String testName;	
 	private Boolean local;
 	private Boolean selenium;
+	private androidHelper android;
+	private home homePage;
+	private resultsPage results;
+	private String sushiFind;
 
 	@Parameters({ "targetEnvironment", "network", "networkLatency", "local",
 			"selenium" })
@@ -72,13 +74,13 @@ public class testSystem {
 					networkLatency, this.local);
 			tes.flowControl();
 			lib = tes.driverAndLibrarySetupLocal();
-			
-		} else {			
+
+		} else {
 			tes = new testSetup(targetEnvironment, rdriver, network,
 					networkLatency);
 			tes.flowControl();
 			// sets up the testNG flows based on testsuite.xml
-			
+
 			lib = tes.driverAndLibrarySetupRemote();
 		}
 
@@ -91,12 +93,11 @@ public class testSystem {
 		android = new androidHelper(lib);
 
 		// set the pages here
-		homePage = new home(lib);
-		results = new resultsPage(lib);
+		homePage = new home(lib, android);
+		results = new resultsPage(lib, android);
 		// end set the pages here
 
 		lib.setTestName(testName);
-		lib.log("testStarted", false);
 		lib.loadPropertyFile("_elements.properties");
 	}
 
@@ -107,35 +108,17 @@ public class testSystem {
 
 	@Test
 	public void highestRatedSushi() throws InterruptedException, IOException {
-
+		lib.log("testStarted", false);
 		try {
+			//goto site
+			homePage.goTo("http://m.yelp.com/la", "Los Angeles Restaurants, Dentists, Bars, Beauty Salons, Doctors");
 			
-			if (lib.getLocal())
-			{
-				lib.clickElement(byFields.xpath, "//*[text()='Chrome']", 60);
-			}
-			
-			lib.log("Going to yelp.com", false);
-			lib.goToPage("http://m.yelp.com/la",
-					"Los Angeles Restaurants, Dentists, Bars, Beauty Salons, Doctors");
-
-			if (lib.isDevice()) {
-				lib.log("Checking if Chrome needs acceptance", false);
-				android.chromeFirstOpenAccepteance(15);
-			}
-
-			// Seeing if the download app nag is showing and handle it
-			if (lib.isDevice()) {
-				lib.switchToContext(availableContexts.VISUAL);
-				if (lib.elementExists(byFields.partialLinkText, "No, thanks")) {
-					homePage.ignoreApp();
-				}
-				lib.switchToContext(availableContexts.WEBVIEW);
-			}
+			//ignore app nagg
+			homePage.ignoreApp();
 
 			// switch to desktop
 			if (lib.isDevice()) {
-			homePage.switchToDesktopSite();
+				homePage.switchToDesktopSite();
 			}
 
 			// entering business to search for
@@ -145,21 +128,24 @@ public class testSystem {
 			homePage.enterLocation("los angeles, ca");
 
 			// submit the results
-			homePage.submitResults();			
+			homePage.submitResults();
 
 			results.selectMoreFeatures();
 
 			results.selectParking();
 
 			results.parkingRequired();
-			
+
 			results.filterFeatures();
-			
+
 			results.sortHighestRated();
 
 			results.selectDollarDollar();
+			
+			sushiFind="The highest rated sushi restraunt in Los Angeles, CA with parking and a cost of $$ is : "
+					+ results.returnHighestRated();
 
-			lib.log("The highest rated sushi restraunt in Los Angeles, CA with parking and a cost of $$ is : " + results.returnHighestRated(), false);
+			lib.log(sushiFind, true);
 
 		} catch (Exception ex) {
 			throw ex;
@@ -174,7 +160,7 @@ public class testSystem {
 
 		// re-attempt driver clean up in case of massive failure
 		lib.testCleanUp();
-		
+
 	}
 
 }

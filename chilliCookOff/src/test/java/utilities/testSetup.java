@@ -46,8 +46,9 @@ public class testSetup {
 	private Boolean local = false;
 	private Boolean selenium = false;
 	private IMobileDevice foundDevice;
+	private MobileBrowserType localBrowser;
 	private MobileDeviceFindOptions options = new MobileDeviceFindOptions();
-
+	
 	public testSetup(String targetEnvironment, RemoteWebDriver driver,
 			String network, String networkLatency) {
 		this.target = targetEnvironment;
@@ -141,19 +142,23 @@ public class testSetup {
 				device = true;
 				options.setModel("iPad Mini 2");
 				options.setOS("Android");
+				localBrowser = MobileBrowserType.SAFARI;
 				break;
 			case "Galaxy S5":
 				device = true;
 				options.setModel("Galaxy S5");
 				options.setOSVersion("5.0");
+				localBrowser = MobileBrowserType.CHROME;
 				break;
 			case "iPhone-6":
 				device = true;
 				options.setModel("iPhone-6");
+				localBrowser = MobileBrowserType.SAFARI;
 				break;
 			case "Galaxy Tab":
 				device = true;
 				options.setModel("SCH-I705 Galaxy Tab 2");
+				localBrowser = MobileBrowserType.CHROME;
 				break;
 			default:
 
@@ -238,10 +243,10 @@ public class testSetup {
 		foundDevice = mdriver.findDevice(options);
 		
 		lib = new library(mdriver, target, 1, network, networkLatency, local,
-				device, foundDevice);
+				device, foundDevice, localBrowser);
 		
 		
-		
+		lib.setCurrentMobileDriver(mobileDrivers.domDriver);
 		foundDevice.open();
 		foundDevice.home();
 		

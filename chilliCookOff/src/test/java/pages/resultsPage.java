@@ -1,5 +1,6 @@
 package pages;
 
+import utilities.androidHelper;
 import utilities.library;
 import utilities.library.byFields;
 import utilities.library.prop;
@@ -7,9 +8,11 @@ import utilities.library.prop;
 public class resultsPage {
 		
 	private library lib;	
+	private androidHelper android;
 
-	public resultsPage(library l) {
+	public resultsPage(library l, androidHelper a) {
 		this.lib = l;
+		this.android=a;
 	}
 	
 	

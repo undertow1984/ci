@@ -28,18 +28,18 @@
       <class name="testing.testSystem"/>
     </classes>
   </test>
-
+-->
   <test name="Test Galaxy Tab 4G">
   <parameter name="targetEnvironment" value="Galaxy Tab" />
   <parameter name="network" value="4G" />
   <parameter name="networkLatency" value="200" />
-   <parameter name="local" value="true" />
-  <parameter name="selenium" value="true" />
+   <parameter name="local" value="false" />
+  <parameter name="selenium" value="false" />
     <classes>
       <class name="testing.testSystem"/>
     </classes>
   </test>
-
+<!-- 
       <test name="Test iPhone 6 4G">
   <parameter name="targetEnvironment" value="iPhone-6" />
    <parameter name="network" value="4G" />
@@ -49,29 +49,31 @@
     <classes>
       <class name="testing.testSystem"/>
     </classes>
-  </test>  
+  </test>
+  -->  
 
      <test name="Test Firefox">
   <parameter name="targetEnvironment" value="Firefox" />
    <parameter name="network" value="" />
    <parameter name="networkLatency" value="" />
-    <parameter name="local" value="true" />
-  <parameter name="selenium" value="true" />
-    <classes>
-      <class name="testing.testSystem"/>
-    </classes>
-  </test>   
-  <test name="Test Chrome">
-  <parameter name="targetEnvironment" value="Chrome" />
-   <parameter name="network" value="" />
-   <parameter name="networkLatency" value="" />
-    <parameter name="local" value="true" />
+    <parameter name="local" value="false" />
   <parameter name="selenium" value="true" />
     <classes>
       <class name="testing.testSystem"/>
     </classes>
   </test>
-   
+
+  <test name="Test Chrome">
+  <parameter name="targetEnvironment" value="Chrome" />
+   <parameter name="network" value="" />
+   <parameter name="networkLatency" value="" />
+    <parameter name="local" value="false" />
+  <parameter name="selenium" value="false" />
+    <classes>
+      <class name="testing.testSystem"/>
+    </classes>
+  </test>
+   <!--
      <test name="Test Galaxy S5 WIFI">
   <parameter name="targetEnvironment" value="Galaxy S5" />
   <parameter name="network" value="WIFI" />

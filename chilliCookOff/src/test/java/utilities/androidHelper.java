@@ -23,6 +23,17 @@ public class androidHelper {
 	//on in case of app data reset / app update
 	public void chromeFirstOpenAccepteance(int wait)
 	{
+		
+		if(lib.getLocal())
+		{
+			
+		}
+		else if (lib.getSelenium())
+		{
+			
+		}
+		else
+		{
 		if (lib.getDriver(remoteD.True).getCapabilities().getCapability("platform")
 				.equals("Android"))			
 		  {
@@ -40,6 +51,7 @@ public class androidHelper {
 			  lib.switchToContext(availableContexts.WEBVIEW);
 		  }
 		  lib.incStep();
+		}
 		}
 	
 	// this needs to be further expanded out to support all available methods

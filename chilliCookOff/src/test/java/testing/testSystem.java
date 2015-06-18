@@ -31,6 +31,7 @@ import pages.*;
 import utilities.*;
 import utilities.library.availableContexts;
 import utilities.library.byFields;
+import utilities.library.mobileD;
 import utilities.library.remoteD;
 import utilities.library.seleniumD;
 
@@ -108,6 +109,12 @@ public class testSystem {
 	public void highestRatedSushi() throws InterruptedException, IOException {
 
 		try {
+			
+			if (lib.getLocal())
+			{
+				lib.clickElement(byFields.xpath, "//*[text()='Chrome']", 60);
+			}
+			
 			lib.log("Going to yelp.com", false);
 			lib.goToPage("http://m.yelp.com/la",
 					"Los Angeles Restaurants, Dentists, Bars, Beauty Salons, Doctors");
@@ -158,28 +165,7 @@ public class testSystem {
 			throw ex;
 		} finally {
 			// downloading the perfecto report and cleaning up the drivers
-			
-			if (selenium)
-			{
-				if (lib.isDevice()) {
-					lib.getDriver(seleniumD.True).close();					
-				} else {
-					lib.getDriver(seleniumD.True).close();
-				}
-				lib.getDriver(seleniumD.True).quit();
-			}
-			else
-			{
-				if (lib.isDevice()) {
-					lib.getDriver(remoteD.True).close();
-					lib.downloadReportDisplay(lib.getDriver(remoteD.True), true);
-				} else {
-					lib.getDriver(remoteD.True).close();
-				}
-				lib.getDriver(remoteD.True).quit();
-			}
-			
-			
+			lib.testCleanUpWithReport();
 		}
 	}
 
@@ -187,36 +173,7 @@ public class testSystem {
 	public void afterTest() throws IOException {
 
 		// re-attempt driver clean up in case of massive failure
-		if (selenium)
-		{
-			try {
-				lib.getDriver(seleniumD.True).close();
-			} catch (Exception ex) {
-
-			}
-
-			try {
-				lib.getDriver(seleniumD.True).quit();
-			} catch (Exception ex) {
-
-			}
-
-		}
-		else
-		{
-			try {
-				lib.getDriver(remoteD.True).close();
-			} catch (Exception ex) {
-
-			}
-
-			try {
-				lib.getDriver(remoteD.True).quit();
-			} catch (Exception ex) {
-
-			}
-
-		}
+		lib.testCleanUp();
 		
 	}
 

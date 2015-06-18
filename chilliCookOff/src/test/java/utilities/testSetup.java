@@ -235,16 +235,16 @@ public class testSetup {
 		
 		mdriver = new MobileDriver("https://partners.perfectomobile.com","jeremyp@perfectomobile.com","Perfecto123");
 		
+		foundDevice = mdriver.findDevice(options);
+		
 		lib = new library(mdriver, target, 1, network, networkLatency, local,
 				device, foundDevice);
 		
-		foundDevice = mdriver.findDevice(options);
+		
 		
 		foundDevice.open();
 		foundDevice.home();
 		
-		lib.setCurrentMobileDriver(mobileDrivers.domDriver);
-
 		return lib;
 	}
 

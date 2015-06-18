@@ -50,7 +50,7 @@ public class library {
 	private Boolean local = false;
 	private Boolean selenium = false;
 	private Boolean device = false;
-	private mobileDrivers currentMobile; 
+	private mobileDrivers currentMobile;
 
 	public enum seleniumD {
 		True
@@ -63,21 +63,22 @@ public class library {
 	public enum mobileD {
 		True
 	};
-	
-	public enum mobileDrivers{
-       domDriver, visualDriver, nativeDriver
+
+	public enum mobileDrivers {
+		domDriver, visualDriver, nativeDriver
 	}
-	
-	public void setCurrentMobileDriver(mobileDrivers md)
-	{
+
+	public void setCurrentMobileDriver(mobileDrivers md) {
 		currentMobile = md;
 	}
-	
-	public mobileDrivers getCurrentMobileDriver()
-	{
+
+	public mobileDrivers getCurrentMobileDriver() {
 		return currentMobile;
 	}
-	
+
+	public IMobileDevice getDevice() {
+		return foundDevice;
+	}
 
 	// page properties
 	public enum prop {
@@ -109,19 +110,20 @@ public class library {
 	}
 
 	public library(MobileDriver driver, String target, int step,
-			String network, String networkLatency, Boolean local, Boolean device, IMobileDevice foundDevice) {
+			String network, String networkLatency, Boolean local,
+			Boolean device, IMobileDevice foundDevice) {
 		this.target = target;
 		this.step = step;
 		this.network = network;
 		this.networkLatency = networkLatency;
 		this.driver = driver;
 		this.device = device;
-		this.foundDevice=foundDevice;
+		this.foundDevice = foundDevice;
+		this.local = local;
 	}
 
 	public library(WebDriver driver, String target, int step, String network,
-			String networkLatency, Boolean selenium,
-			Boolean device) {
+			String networkLatency, Boolean selenium, Boolean device) {
 		this.target = target;
 		this.step = step;
 		this.network = network;
@@ -129,32 +131,28 @@ public class library {
 		this.driver = driver;
 		this.device = device;
 	}
-	
+
 	public WebDriver getDriver(seleniumD a) {
 		return (WebDriver) driver;
 	}
 
 	public IMobileWebDriver getDriver(mobileD a, mobileDrivers md) {
-		if(md.equals(mobileDrivers.domDriver))
-		{
-		return ((IMobileDriver)driver).getDevice(foundDevice.getDeviceId()).getDOMDriver();
+		if (md.equals(mobileDrivers.domDriver)) {
+			return ((MobileDriver) driver).getDevice(foundDevice.getDeviceId())
+					.getDOMDriver();
+		} else if (md.equals(mobileDrivers.nativeDriver)) {
+			return ((MobileDriver) driver).getDevice(foundDevice.getDeviceId())
+					.getNativeDriver();
+		} else {
+			return ((MobileDriver) driver).getDevice(foundDevice.getDeviceId())
+					.getVisualDriver();
 		}
-		else if (md.equals(mobileDrivers.nativeDriver))
-		{
-			return ((IMobileDriver)driver).getDevice(foundDevice.getDeviceId()).getNativeDriver();
-		}
-		else
-		{
-			return ((IMobileDriver)driver).getDevice(foundDevice.getDeviceId()).getVisualDriver();
-		}
-		
-		
+
 	}
 
 	public RemoteWebDriver getDriver(remoteD a) {
 		return (RemoteWebDriver) driver;
 	}
-	
 
 	// returns local variable
 	public Boolean getLocal() {
@@ -211,8 +209,8 @@ public class library {
 	public int getStep() {
 		return step;
 	}
-	
-	//increment step
+
+	// increment step
 	public int incStep() {
 		return step++;
 	}
@@ -225,8 +223,7 @@ public class library {
 		Map<String, Object> params = new HashMap<>();
 		params.put("profile", profile);
 		params.put("latency", latency);
-		Object result = getDriver(remoteD.True).executeScript(command,
-				params);
+		Object result = getDriver(remoteD.True).executeScript(command, params);
 		return result;
 
 	}
@@ -239,8 +236,7 @@ public class library {
 		Map<String, Object> params = new HashMap<>();
 		params.put("profile", profile);
 		params.put("latency", latency);
-		Object result = getDriver(remoteD.True).executeScript(command,
-				params);
+		Object result = getDriver(remoteD.True).executeScript(command, params);
 		return result;
 
 	}
@@ -251,8 +247,7 @@ public class library {
 		log("stopping network settings", true);
 		String command = "mobile:vnetwork:stop";
 		Map<String, Object> params = new HashMap<>();
-		Object result = getDriver(remoteD.True).executeScript(command,
-				params);
+		Object result = getDriver(remoteD.True).executeScript(command, params);
 		return result;
 
 	}
@@ -316,10 +311,9 @@ public class library {
 	public void errorCleanup() {
 		if (selenium)
 			getDriver(seleniumD.True).quit();
-		else
-		{
+		else {
 			getDriver(remoteD.True).close();
-		getDriver(remoteD.True).quit();
+			getDriver(remoteD.True).quit();
 		}
 
 	}
@@ -477,11 +471,66 @@ public class library {
 			getDriver(seleniumD.True).get(url);
 		else if (local)
 			getDriver(mobileD.True, currentMobile);
-			else
+		else
 			getDriver(remoteD.True).get(url);
 		waitForTitle(10, title);
 		takeScreen("goToPage: " + url + "_" + title, true);
 		step++;
+	}
+
+	public void testCleanUpWithReport() throws IOException {
+		if (selenium) {
+			if (isDevice()) {
+				getDriver(seleniumD.True).close();
+			} else {
+				getDriver(seleniumD.True).close();
+			}
+			getDriver(seleniumD.True).quit();
+		} else if (local) {
+			getDevice().close();
+			((MobileDriver) driver).quit();
+		} else {
+			if (isDevice()) {
+				getDriver(remoteD.True).close();
+				downloadReportDisplay(getDriver(remoteD.True), true);
+			} else {
+				getDriver(remoteD.True).close();
+			}
+			getDriver(remoteD.True).quit();
+		}
+	}
+
+	public void testCleanUp() {
+		if (selenium) {
+			try {
+				getDriver(seleniumD.True).close();
+			} catch (Exception ex) {
+
+			}
+
+			try {
+				getDriver(seleniumD.True).quit();
+			} catch (Exception ex) {
+
+			}
+
+		} else if (local) {
+			getDevice().close();
+			((MobileDriver) driver).quit();
+		} else {
+			try {
+				getDriver(remoteD.True).close();
+			} catch (Exception ex) {
+
+			}
+
+			try {
+				getDriver(remoteD.True).quit();
+			} catch (Exception ex) {
+
+			}
+
+		}
 	}
 
 	// gets the current url
@@ -526,9 +575,9 @@ public class library {
 	// returns an element
 	public WebElement getElement(byFields by, String element) {
 
-		return (selenium) ? getDriver(seleniumD.True)
-				.findElement(getBy(by, element)) : getDriver(remoteD.True)
-				.findElement(getBy(by, element));
+		return (selenium) ? getDriver(seleniumD.True).findElement(
+				getBy(by, element)) : getDriver(remoteD.True).findElement(
+				getBy(by, element));
 	}
 
 	// checks if element exists
@@ -551,10 +600,10 @@ public class library {
 		try {
 			waitForElement(timeOut, by, element);
 			if (selenium)
-				getDriver(seleniumD.True).findElement(getBy(by, element)).clear();
-			else
-				getDriver(remoteD.True).findElement(getBy(by, element))
+				getDriver(seleniumD.True).findElement(getBy(by, element))
 						.clear();
+			else
+				getDriver(remoteD.True).findElement(getBy(by, element)).clear();
 			takeScreen("clearText: " + "_" + by + "_" + element, true);
 			step++;
 		} catch (Exception ex) {
@@ -573,8 +622,8 @@ public class library {
 				clearText(by, element, timeOut);
 			}
 			if (selenium)
-				getDriver(seleniumD.True).findElement(getBy(by, element)).sendKeys(
-						data);
+				getDriver(seleniumD.True).findElement(getBy(by, element))
+						.sendKeys(data);
 			else
 				getDriver(remoteD.True).findElement(getBy(by, element))
 						.sendKeys(data);
@@ -602,20 +651,22 @@ public class library {
 	public String getValue(byFields by, String element, int timeOut) {
 
 		waitForElement(timeOut, by, element);
-		return (selenium) ? getDriver(seleniumD.True)
-				.findElement(getBy(by, element)).getAttribute("value")
-				: getDriver(remoteD.True).findElement(getBy(by, element))
-						.getAttribute("value");
+		return (selenium) ? getDriver(seleniumD.True).findElement(
+				getBy(by, element)).getAttribute("value") : getDriver(
+				remoteD.True).findElement(getBy(by, element)).getAttribute(
+				"value");
 	}
 
 	// clicks and element
 	public void clickElement(byFields by, String element, int timeOut) {
 
 		waitForElement(timeOut, by, element);
-		if (selenium)
+		if (selenium) {
 			getDriver(seleniumD.True).findElement(getBy(by, element)).click();
-		else
+		} else if (local) {
+		} else {
 			getDriver(remoteD.True).findElement(getBy(by, element)).click();
+		}
 		waitForElement(timeOut, by, element);
 		takeScreen("clickElement: " + by + "_" + element, true);
 		step++;
@@ -627,7 +678,8 @@ public class library {
 		try {
 			waitForElement(timeOut, by, element);
 			if (selenium)
-				getDriver(seleniumD.True).findElement(getBy(by, element)).submit();
+				getDriver(seleniumD.True).findElement(getBy(by, element))
+						.submit();
 			else
 				getDriver(remoteD.True).findElement(getBy(by, element))
 						.submit();
@@ -647,11 +699,11 @@ public class library {
 		try {
 			waitForElement(timeOut, by, element);
 			if (selenium)
-				new Select(getDriver(seleniumD.True).findElement(getBy(by, element)))
-						.selectByVisibleText(text);
+				new Select(getDriver(seleniumD.True).findElement(
+						getBy(by, element))).selectByVisibleText(text);
 			else
-				new Select(getDriver(remoteD.True).findElement(getBy(by,
-						element))).selectByVisibleText(text);
+				new Select(getDriver(remoteD.True).findElement(
+						getBy(by, element))).selectByVisibleText(text);
 
 			waitForElement(timeOut, by, element);
 			takeScreen("setDropDownText: " + by + "_" + element + "_" + text,
@@ -671,11 +723,11 @@ public class library {
 		try {
 			waitForElement(timeOut, by, element);
 			if (selenium)
-				new Select(getDriver(seleniumD.True).findElement(getBy(by, element)))
-						.selectByValue(text);
+				new Select(getDriver(seleniumD.True).findElement(
+						getBy(by, element))).selectByValue(text);
 			else
-				new Select(getDriver(remoteD.True).findElement(getBy(by,
-						element))).selectByValue(text);
+				new Select(getDriver(remoteD.True).findElement(
+						getBy(by, element))).selectByValue(text);
 			waitForElement(timeOut, by, element);
 			takeScreen("setDropDownValue: " + by + "_" + element + "_" + text,
 					true);
@@ -687,9 +739,9 @@ public class library {
 
 	// gets windows size of desktop browser
 	public String getWindowSize() {
-		return (selenium) ? getDriver(seleniumD.True).manage().window().getSize()
-				.toString() : getDriver(remoteD.True).manage().window()
-				.getSize().toString();
+		return (selenium) ? getDriver(seleniumD.True).manage().window()
+				.getSize().toString() : getDriver(remoteD.True).manage()
+				.window().getSize().toString();
 	}
 
 	// gets windows position of desktop browser

@@ -13,17 +13,20 @@ public class home {
 	private library lib;
 	private androidHelper android;
 
+	//setting library
 	public home(library l, androidHelper a) {
 		this.lib = l;
 		this.android = a;
 	}
 	
+	//sends browser to specified url and sets wait condition for page title
 	public void goTo(String url, String title)
 	{
 	lib.log("Going to " + url, false);
 	lib.goToPage(url,
 			title);
 
+	//checks if chrome has been opened first time since installed/settings cleared
 	if (lib.isDevice()) {
 		lib.log("Checking if Chrome needs acceptance", false);
 		android.chromeFirstOpenAccepteance(15);
@@ -53,21 +56,25 @@ public class home {
 				}
 	}
 	
+	//switches site to desktop view to expose additional filter options
 	public void switchToDesktopSite()
 	{
 		lib.clickElement(byFields.linkText, "Desktop Site", 60);
 	}
 	
+	//enter the name of the business to search for
 	public void enterBusiness(String text)
 	{
 		lib.setText(byFields.xpath, lib.getProp(prop.findBox), text, true, 60);
 	}
 	
+	//the the location you are attempting to find the business in
 	public void enterLocation(String text)
 	{
 		lib.setText(byFields.xpath, lib.getProp(prop.nearBox), text, true, 60);
 	}
 	
+	//submitting search items
 	public void submitResults()
 	{
 		lib.submitElement(byFields.xpath, lib.getProp(prop.searchButton), 60);

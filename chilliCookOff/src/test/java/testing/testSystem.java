@@ -116,7 +116,7 @@ public class testSystem {
 			//ignore app nagg
 			homePage.ignoreApp();
 
-			// switch to desktop
+			// switch to desktop version of site -- parking options aren't available via app or mobile site
 			if (lib.isDevice()) {
 				homePage.switchToDesktopSite();
 			}
@@ -127,24 +127,32 @@ public class testSystem {
 			// entering the city to search for the business in
 			homePage.enterLocation("los angeles, ca");
 
-			// submit the results
+			// submit the search results
 			homePage.submitResults();
 
+			//opening more features box
 			results.selectMoreFeatures();
 
+			//opening he parking options
 			results.selectParking();
 
+			//selecting parking options minus validated parking
 			results.parkingRequired();
 
+			//filter results based on the selected "features"
 			results.filterFeatures();
 
-			results.sortHighestRated();
-
+			//selecting dollar amount of $$
 			results.selectDollarDollar();
 			
+			//sorting results by the highest rated
+			results.sortHighestRated();
+			
+			//storing the the highest rated sushi within the specified criteria
 			sushiFind="The highest rated sushi restraunt in Los Angeles, CA with parking and a cost of $$ is : "
 					+ results.returnHighestRated();
 
+			//display the results to the console and reportng/testng report
 			lib.log(sushiFind, true);
 
 		} catch (Exception ex) {

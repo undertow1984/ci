@@ -49,6 +49,7 @@ public class testSetup {
 	private MobileBrowserType localBrowser;
 	private MobileDeviceFindOptions options = new MobileDeviceFindOptions();
 	
+	//initializes the class, an option for each driver type
 	public testSetup(String targetEnvironment, RemoteWebDriver driver,
 			String network, String networkLatency) {
 		this.target = targetEnvironment;
@@ -81,6 +82,7 @@ public class testSetup {
 	public void flowControl() {
 
 		if (!local) {
+			//remote web driver capabilities - includes desktop for selenium grid
 			switch (target) {
 			case "iPad Mini":
 				device = true;
@@ -137,6 +139,7 @@ public class testSetup {
 				break;
 			}
 		} else {
+			//capabilities for mobile driver - local - excludes desktop
 			switch (target) {
 			case "iPad Mini":
 				device = true;
@@ -173,7 +176,7 @@ public class testSetup {
 			throws UnsupportedEncodingException, MalformedURLException,
 			InterruptedException {
 		if (device) {
-
+			//sets mobile cloud credentials and host for devices through remote web driver
 			String host = "partners.perfectomobile.com";
 			String user = URLEncoder.encode("jeremyp@perfectomobile.com",
 					"UTF-8");
@@ -188,13 +191,14 @@ public class testSetup {
 			// String user = URLEncoder.encode("jeremyp@perfectomobile.com",
 			// "UTF-8");
 			// String password = URLEncoder.encode("JP123!", "UTF-8");
-
+			
+			//finalizes connection string
 			URL gridURL = new URL("https://" + user + ":" + password + "@"
 					+ host + "/nexperience/wd/hub");
 			SELENIUM_HUB_URL = getConfigurationProperty("SELENIUM_HUB_URL",
 					"test.selenium.hub.url", gridURL.toString());
 		} else {
-
+			//perfecto grid system for desktop browsers through remote web driver
 			SELENIUM_HUB_URL = getConfigurationProperty("SELENIUM_HUB_URL",
 					"test.selenium.hub.url",
 					"http://seleniumgrid.perfectomobilelab.net:4444/wd/hub");
@@ -202,9 +206,10 @@ public class testSetup {
 
 		int z = 0;
 		int tryCount = 0;
+		//will try to retrieve device/browser up to 5 time with a 2 minute wait in between
 		while (z != 1) {
 			try {
-
+				//retriving device/browser for remote web driver
 				rdriver = new RemoteWebDriver(new URL(SELENIUM_HUB_URL),
 						capabilities);
 				rdriver.manage().timeouts()
@@ -229,32 +234,29 @@ public class testSetup {
 		return lib;
 	}
 
-	// connects to selenium grid at perfecto as well as establishes
-	// device connectivity to mobile cloud
+	//connects mobile driver -- local
 	public library driverAndLibrarySetupLocal()
 			throws UnsupportedEncodingException, MalformedURLException,
 			InterruptedException {
 		
-
-		
-		
 		mdriver = new MobileDriver("https://partners.perfectomobile.com","jeremyp@perfectomobile.com","Perfecto123");
-		
+		//pulls device from the driver
 		foundDevice = mdriver.findDevice(options);
 		
 		lib = new library(mdriver, target, 1, network, networkLatency, local,
 				device, foundDevice, localBrowser);
 		
-		
+		//sets default mobile driver type
 		lib.setCurrentMobileDriver(mobileDrivers.domDriver);
+		
+		//initializes the device
 		foundDevice.open();
 		foundDevice.home();
 		
 		return lib;
 	}
 
-	// connects to selenium grid at perfecto as well as establishes
-	// device connectivity to mobile cloud
+	// initializes the selenium driver based on the browser type - selenium
 	public library driverAndLibrarySetupSelenium()
 			throws UnsupportedEncodingException, MalformedURLException,
 			InterruptedException {

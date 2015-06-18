@@ -54,50 +54,8 @@ public class library {
 	private Boolean device = false;
 	private mobileDrivers currentMobile;
 	private MobileBrowserType localBrowser;
-
-	public enum seleniumD {
-		True
-	};
-
-	public enum remoteD {
-		True
-	};
-
-	public enum mobileD {
-		True
-	};
-
-	public enum mobileDrivers {
-		domDriver, visualDriver, nativeDriver
-	}
-
-	public void setCurrentMobileDriver(mobileDrivers md) {
-		currentMobile = md;
-	}
-
-	public mobileDrivers getCurrentMobileDriver() {
-		return currentMobile;
-	}
-
-	public IMobileDevice getDevice() {
-		return foundDevice;
-	}
-
-	// page properties
-	public enum prop {
-		findBox, nearBox, searchButton, dollarDollar, highestRated, parkingLink, lotOption, streetOption, valetOption, garageOption, filterButton, iframe, highestRatedLink
-	}
-
-	// end properties
-
-	public enum byFields {
-		id, name, css, tag, className, linkText, partialLinkText, xpath,
-	}
-
-	public enum availableContexts {
-		WEBVIEW, NATIVE_APP, VISUAL
-	}
-
+	
+	//initializes the class, a different option based on the selected driver type
 	public library(RemoteWebDriver driver) {
 		this.driver = driver;
 	}
@@ -137,10 +95,65 @@ public class library {
 		this.device = device;
 	}
 
+
+	//enum to make selenium getDriver signature unique
+	public enum seleniumD {
+		True
+	};
+
+	//enum to make remote getDriver signature unique
+	public enum remoteD {
+		True
+	};
+
+	//enum to make mobile/local getDriver signature unique
+	public enum mobileD {
+		True
+	};
+
+	//available mobile drivers --- this will go away and be embedded into the switch context method
+	public enum mobileDrivers {
+		domDriver, visualDriver, nativeDriver
+	}
+
+	//sets the current version of the mobile driver -- soon this will only be called by the switch context method
+	public void setCurrentMobileDriver(mobileDrivers md) {
+		currentMobile = md;
+	}
+
+	//returns the current set mobile driver
+	public mobileDrivers getCurrentMobileDriver() {
+		return currentMobile;
+	}
+
+	//returns the current mobile device
+	public IMobileDevice getDevice() {
+		return foundDevice;
+	}
+
+	// page properties
+	public enum prop {
+		findBox, nearBox, searchButton, dollarDollar, highestRated, parkingLink, lotOption, streetOption, valetOption, garageOption, filterButton, iframe, highestRatedLink
+	}
+
+	// end properties
+
+	//by fields available in selenium
+	public enum byFields {
+		id, name, css, tag, className, linkText, partialLinkText, xpath,
+	}
+
+	//returns the available contexts within remote web driver
+	public enum availableContexts {
+		WEBVIEW, NATIVE_APP, VISUAL
+	}
+
+	//returns webDriver - selenium	
 	public WebDriver getDriver(seleniumD a) {
 		return (WebDriver) driver;
 	}
 
+	//returns mobileDriver - local
 	public IMobileWebDriver getDriver(mobileD a, mobileDrivers md) {
 		if (md.equals(mobileDrivers.domDriver)) {
 			return ((MobileDriver) driver).getDevice(foundDevice.getDeviceId())
@@ -155,6 +168,7 @@ public class library {
 
 	}
 
+	//retursn remoteWebDriver - remote
 	public RemoteWebDriver getDriver(remoteD a) {
 		return (RemoteWebDriver) driver;
 	}
@@ -176,6 +190,7 @@ public class library {
 		properties.load(inputStream);
 	}
 
+	//pulls property value based on enum
 	public String getProp(prop propName) {
 		return properties.getProperty(propName.toString());
 	}
@@ -394,17 +409,16 @@ public class library {
 					+ "_Step" + step + "_" + dateFormat.format(new Date())
 					+ ".png";
 
-			// copy screen shot to directory
+			// copy screen shot to directory for jenkins
 			try {
 				FileUtils.copyFile(scrFile, new File(destDir + "/" + destFile));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			
-			String fileCopyLocation="./test-output/html/screenshots/";
-						
-			new File(fileCopyLocation).mkdirs();
-			
+			//copys screen shot to 2nd directory for local debug
+			String fileCopyLocation="./test-output/html/screenshots/";						
+			new File(fileCopyLocation).mkdirs();			
 			try {
 				FileUtils.copyFile(scrFile, new File(fileCopyLocation + "/" + destFile));
 			} catch (IOException e) {
@@ -474,32 +488,26 @@ public class library {
 		if (isDevice()) {
 			
 			if (getLocal()) {
-				InputStream report = ((MobileDriver)driver).downloadReport(MediaType.PDF);
-					
-				File reportFile = new File(fileLocation + file + "." + type);
-				
+				//downloads report for mobile driver
+				InputStream report = ((MobileDriver)driver).downloadReport(MediaType.PDF);					
+				//download report to jenkins directory				
+				File reportFile = new File(fileLocation + file + "." + type);				
 				FileUtils.write(report, reportFile);
-				
-				String fileCopyLocation="./test-output/html/screenshots/";
-				
-				File reportFileCopy = new File(fileCopyLocation + file + "." + type);
-				
-				
-				
-				new File(fileCopyLocation).mkdirs();
-				
+				//copies report to 2nd directory for local debug
+				String fileCopyLocation="./test-output/html/screenshots/";				
+				File reportFileCopy = new File(fileCopyLocation + file + "." + type);				
+				new File(fileCopyLocation).mkdirs();				
 				FileUtils.copyFile(reportFile, reportFileCopy);
 			} else {
-				// downloads report from perfecto
+				// downloads report for remote web driver
 				String command = "mobile:report:download";
 				Map<String, Object> params = new HashMap<>();
 				params.put("type", type);
-				String report;
-				
+				String report;				
 					report = (String) getDriver(remoteD.True).executeScript(
 							command, params);
 					
-				
+				//download to directory for jenkins
 				File reportFile = new File(fileLocation + "/" + file + "." + type);
 				BufferedOutputStream output = new BufferedOutputStream(
 						new FileOutputStream(reportFile));
@@ -507,22 +515,119 @@ public class library {
 						.convertFromBase64Png(report);
 				output.write(reportBytes);
 				output.close();
-				
-				
-				
-				String fileCopyLocation="./test-output/html/screenshots/";
-				
+								
+				//copies report to 2nd directory for local debug
+				String fileCopyLocation="./test-output/html/screenshots/";				
 				File reportFileCopy = new File(fileCopyLocation + file + "." + type);
-				
-				
-				
-				new File(fileCopyLocation).mkdirs();
-				
+				new File(fileCopyLocation).mkdirs();				
 				FileUtils.copyFile(reportFile, reportFileCopy);
 			}
 			
 		}
 	}
+	
+	//called at end of test to clean up drivers and download the report when necessary
+		public void testCleanUpWithReport() {
+			if (selenium) {
+				try {
+					if (isDevice()) {
+						getDriver(seleniumD.True).close();
+					} else {
+						getDriver(seleniumD.True).close();
+					}
+				} catch (Exception ex) {
+
+				}
+				try {
+					getDriver(seleniumD.True).quit();
+				} catch (Exception ex) {
+
+				}
+			} else if (local) {
+				try {
+					getDevice().close();
+				} catch (Exception ex) {
+
+				}
+				try {
+					((MobileDriver) driver).quit();
+				} catch (Exception ex) {
+
+				}
+				try {
+					downloadReportDisplay(true);
+				} catch (Exception ex) {
+
+				}
+				
+			} else {
+				if (isDevice()) {
+					try {
+						getDriver(remoteD.True).close();
+					} catch (Exception ex) {
+
+					}
+					try {
+						downloadReportDisplay(true);
+					} catch (Exception ex) {
+
+					}
+				} else {
+					try {
+						getDriver(remoteD.True).close();
+					} catch (Exception ex) {
+
+					}
+				}
+				try {
+					getDriver(remoteD.True).quit();
+				} catch (Exception ex) {
+
+				}
+			}
+		}
+
+		//called by afterTest in a 2nd attempt to clean up drivers in case of script failures 
+		//which were not handled and didn't allow clean up first time
+		public void testCleanUp() {
+			if (selenium) {
+				try {
+					getDriver(seleniumD.True).close();
+				} catch (Exception ex) {
+
+				}
+
+				try {
+					getDriver(seleniumD.True).quit();
+				} catch (Exception ex) {
+
+				}
+
+			} else if (local) {
+				try {
+					getDevice().close();
+				} catch (Exception ex) {
+
+				}
+				try {
+					((MobileDriver) driver).quit();
+				} catch (Exception ex) {
+				}
+
+			} else {
+				try {
+					getDriver(remoteD.True).close();
+				} catch (Exception ex) {
+				}
+
+				try {
+					getDriver(remoteD.True).quit();
+				} catch (Exception ex) {
+
+				}
+
+			}
+		}
 
 	// sets the initial page for the browser
 	public void goToPage(String url, String title) {
@@ -536,107 +641,6 @@ public class library {
 		waitForTitle(10, title);
 		takeScreen("goToPage: " + url + "_" + title, true);
 		step++;
-	}
-
-	public void testCleanUpWithReport() {
-		if (selenium) {
-			try {
-				if (isDevice()) {
-					getDriver(seleniumD.True).close();
-				} else {
-					getDriver(seleniumD.True).close();
-				}
-			} catch (Exception ex) {
-
-			}
-			try {
-				getDriver(seleniumD.True).quit();
-			} catch (Exception ex) {
-
-			}
-		} else if (local) {
-			try {
-				getDevice().close();
-			} catch (Exception ex) {
-
-			}
-			try {
-				((MobileDriver) driver).quit();
-			} catch (Exception ex) {
-
-			}
-			try {
-				downloadReportDisplay(true);
-			} catch (Exception ex) {
-
-			}
-			
-		} else {
-			if (isDevice()) {
-				try {
-					getDriver(remoteD.True).close();
-				} catch (Exception ex) {
-
-				}
-				try {
-					downloadReportDisplay(true);
-				} catch (Exception ex) {
-
-				}
-			} else {
-				try {
-					getDriver(remoteD.True).close();
-				} catch (Exception ex) {
-
-				}
-			}
-			try {
-				getDriver(remoteD.True).quit();
-			} catch (Exception ex) {
-
-			}
-		}
-	}
-
-	public void testCleanUp() {
-		if (selenium) {
-			try {
-				getDriver(seleniumD.True).close();
-			} catch (Exception ex) {
-
-			}
-
-			try {
-				getDriver(seleniumD.True).quit();
-			} catch (Exception ex) {
-
-			}
-
-		} else if (local) {
-			try {
-				getDevice().close();
-			} catch (Exception ex) {
-
-			}
-			try {
-				((MobileDriver) driver).quit();
-			} catch (Exception ex) {
-			}
-
-		} else {
-			try {
-				getDriver(remoteD.True).close();
-			} catch (Exception ex) {
-
-			}
-
-			try {
-				getDriver(remoteD.True).quit();
-			} catch (Exception ex) {
-
-			}
-
-		}
 	}
 
 	// gets the current url

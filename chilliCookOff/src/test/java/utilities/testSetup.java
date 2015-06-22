@@ -1,5 +1,6 @@
 package utilities;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -266,11 +267,14 @@ public class testSetup {
 			lib = new library(driver, target, 1, network, networkLatency,
 					selenium, device);
 		} else if (target.equals("Chrome")) {
-			driver = new ChromeDriver();
+			
+			System.setProperty("webdriver.chrome.driver", ".\\target\\test-classes\\ChromeDriver.exe");
+			driver = new ChromeDriver();			
 			lib = new library(driver, target, 1, network, networkLatency,
 					selenium, device);
 		} else if (target.equals("Internet Explorer")) {
-			driver = new InternetExplorerDriver();
+			System.setProperty("webdriver.ie.driver", ".\\target\\test-classes\\IEDriverServer.exe");
+			driver = new InternetExplorerDriver();			
 			lib = new library(driver, target, 1, network, networkLatency,
 					selenium, device);
 		}

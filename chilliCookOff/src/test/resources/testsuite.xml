@@ -5,7 +5,7 @@
 	  <listener class-name="org.uncommons.reportng.HTMLReporter"/>
       <listener class-name="org.uncommons.reportng.JUnitXMLReporter"/>
   </listeners>
-
+<!-- 
     <test name="Test Galaxy 4G">
   <parameter name="targetEnvironment" value="Galaxy S5" />
   <parameter name="network" value="4G" />
@@ -17,18 +17,18 @@
     </classes>
   </test>
 
-<!-- 
+-->
     <test name="Test Internet Explorer">
   <parameter name="targetEnvironment" value="Internet Explorer" />
   <parameter name="network" value="" />
   <parameter name="networkLatency" value="" />
-   <parameter name="local" value="true" />
+   <parameter name="local" value="false" />
   <parameter name="selenium" value="true" />
     <classes>
       <class name="testing.testSystem"/>
     </classes>
   </test>
--->
+<!-- 
   <test name="Test Galaxy Tab 4G">
   <parameter name="targetEnvironment" value="Galaxy Tab" />
   <parameter name="network" value="4G" />
@@ -39,7 +39,7 @@
       <class name="testing.testSystem"/>
     </classes>
   </test>
-<!-- 
+
       <test name="Test iPhone 6 4G">
   <parameter name="targetEnvironment" value="iPhone-6" />
    <parameter name="network" value="4G" />
@@ -51,7 +51,7 @@
     </classes>
   </test>
   -->  
-
+<!-- 
      <test name="Test Firefox">
   <parameter name="targetEnvironment" value="Firefox" />
    <parameter name="network" value="" />
@@ -62,13 +62,13 @@
       <class name="testing.testSystem"/>
     </classes>
   </test>
-
+-->
   <test name="Test Chrome">
   <parameter name="targetEnvironment" value="Chrome" />
    <parameter name="network" value="" />
    <parameter name="networkLatency" value="" />
     <parameter name="local" value="false" />
-  <parameter name="selenium" value="false" />
+  <parameter name="selenium" value="true" />
     <classes>
       <class name="testing.testSystem"/>
     </classes>

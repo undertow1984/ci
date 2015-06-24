@@ -100,10 +100,10 @@ public class testSetup {
 				capabilities.setCapability("osVersion", "5.0");
 				capabilities.setCapability("automationName", "PerfectoMobile");
 				break;
-			case "iPhone-6":
+			case "iPhone-6 Plus":
 				device = true;
 				capabilities.setCapability("platformName", "iOS");
-				capabilities.setCapability("model", "iPhone-6");
+				capabilities.setCapability("model", "iPhone-6 Plus");
 				capabilities.setCapability("browserName", "Safari");
 				capabilities.setCapability("automationName", "PerfectoMobile");
 				break;
@@ -154,9 +154,9 @@ public class testSetup {
 				options.setOSVersion("5.0");
 				localBrowser = MobileBrowserType.CHROME;
 				break;
-			case "iPhone-6":
+			case "iPhone-6 Plus":
 				device = true;
-				options.setModel("iPhone-6");
+				options.setModel("iPhone-6 Plus");
 				localBrowser = MobileBrowserType.SAFARI;
 				break;
 			case "Galaxy Tab":

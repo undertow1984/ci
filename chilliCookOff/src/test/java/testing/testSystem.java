@@ -58,7 +58,7 @@ public class testSystem {
 			throws InterruptedException, IOException {
 
 		// debug options
-		// set for local vs remote execution
+		// set for mobile local vs remote execution
 		this.local = Boolean.parseBoolean(local);
 		// set selenium for local desktop execution
 		this.selenium = Boolean.parseBoolean(selenium);
@@ -97,7 +97,6 @@ public class testSystem {
 		results = new resultsPage(lib, android);
 		// end set the pages here
 
-		lib.setTestName(testName);
 		lib.loadPropertyFile("_elements.properties");
 	}
 

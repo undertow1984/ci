@@ -77,7 +77,7 @@ public class home {
 	//submitting search items
 	public void submitResults()
 	{
-		lib.submitElement(byFields.xpath, lib.getProp(prop.searchButton), 60);
+		lib.clickElement(byFields.xpath, lib.getProp(prop.searchButton), 60);
 	}
 
 }

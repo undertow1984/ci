@@ -373,6 +373,15 @@
           <target>1.7</target>
         </configuration>
       </plugin>
-    </plugins>	
+    </plugins>	   
+   <sourceDirectory>src</sourceDirectory>
+   <resources>
+       <resource>
+        <directory>src</directory>
+        <includes>
+         <include>**/**/*.properties</include>
+        </includes>
+       </resource>
+   </resources>    
 	</build>
 </project>

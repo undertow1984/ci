@@ -407,6 +407,18 @@ public class library {
 
 		return driver.findElement(getBy(by, element));
 	}
+	
+	// returns an element
+		public int getElements(byFields by, String element) {
+
+			try {
+				driver.findElements(getBy(by, element));
+			} catch (Exception ex) {
+
+			}
+
+			return driver.findElements(getBy(by, element)).size();
+		}
 
 	// checks if element exists
 	public Boolean elementExists(byFields by, String element) {

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -15,6 +16,7 @@ import org.testng.annotations.AfterTest;
 
 import pages.*;
 import utilities.*;
+import utilities.library.byFields;
 
 public class AmazonTestSystem {
 	private RemoteWebDriver driver;
@@ -79,6 +81,12 @@ public class AmazonTestSystem {
 						
 			lib.log("Checking if Chrome needs acceptance",false);
 		    android.chromeFirstOpenAccepteance(60);
+		    
+		    if (lib.getDriver().findElementsByXPath("//*[@data-nav-tabindex='9' or @data-nav-tabindex='10' or @data-nav-tabindex='12']").size() == 3)
+		    {
+		    
+		    }
+		    
 		                
 			lib.log("Enter book into search box",false);
 			homePage.searchBoxText("Army of darkness volume one", 60);

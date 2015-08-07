@@ -27,6 +27,8 @@ public class AmazonTestSystem {
 	private searchResults searchResultsPage;
 	private cartFunctions cart;
 	private String testName;
+	
+	
 
 	@Parameters({ "targetEnvironment", "network", "networkLatency" })
 	@BeforeTest
@@ -36,6 +38,7 @@ public class AmazonTestSystem {
 		tes = new testSetup(targetEnvironment, driver, network, networkLatency);
 		// sets up the testNG flows based on testsuite.xml
 		tes.flowControl();
+		org.apache.log4j.BasicConfigurator.configure();
 	}
 
 	public void setPagesAndHelpers(library lib)

@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 
+import org.apache.log4j.Appender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
@@ -39,6 +42,7 @@ public class AmazonTestSystem {
 		// sets up the testNG flows based on testsuite.xml
 		tes.flowControl();
 		org.apache.log4j.BasicConfigurator.configure();
+		Logger.getRootLogger().setLevel(Level.FATAL);
 	}
 
 	public void setPagesAndHelpers(library lib)

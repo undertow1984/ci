@@ -47,6 +47,12 @@
 			<artifactId>http-client</artifactId>
 			<version>4.14.0.3</version>
 		</dependency>
+			<dependency>
+  		<groupId>org.uncommons</groupId>
+  		<artifactId>reportng</artifactId>
+  		<version>1.1.4</version>
+  	</dependency>
+		
  <!-- 		<dependency>
 	<groupId>log4j</groupId>
 	<artifactId>log4j</artifactId>
@@ -80,11 +86,7 @@
   		<artifactId>testng</artifactId>
   		<version>6.9.4</version>
   	</dependency>
-  	  	<dependency>
-  		<groupId>org.uncommons</groupId>
-  		<artifactId>reportng</artifactId>
-  		<version>1.1.4</version>
-  	</dependency>
+  	  
   	<dependency>
   		<groupId>velocity</groupId>
   		<artifactId>velocity-dep</artifactId>

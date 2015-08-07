@@ -42,7 +42,7 @@ public class AmazonTestSystem {
 		// sets up the testNG flows based on testsuite.xml
 		tes.flowControl();
 		org.apache.log4j.BasicConfigurator.configure();
-		Logger.getRootLogger().setLevel(Level.FATAL);
+		
 	}
 
 	public void setPagesAndHelpers(library lib)

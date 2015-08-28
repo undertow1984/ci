@@ -1,0 +1,5 @@
+﻿site=http://state.gov
+searchField=//*[@id='search-field-input' or @id='search-input']
+articles=//*[@id='result-{0}']/h4/a
+searchButton=//*[@id='search-button']
+searchIcon=//a[text()='Main']/following-sibling::div[2]

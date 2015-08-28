@@ -1,0 +1,7 @@
+﻿hotel=//*[text()='Hotels']
+locationSearch=//*[@contentDesc='Enter text into hotel search Field']
+sort=//*[text()='Sort' and @enabled='true']
+sortByRating=//*[text()='Rating']
+stayBridge=//*[text()='Staybridge Suites Las Vegas']
+selectRoom=//*[@contentDesc='Press to book this hotel now']
+standardRoom=//*[text()='Standard Suite']

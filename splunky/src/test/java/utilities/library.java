@@ -337,16 +337,6 @@ public class library {
 				e.printStackTrace();
 			}
 			
-			//copys screen shot to 2nd directory for local debug
-			String fileCopyLocation="./test-output/html/screenshots/";						
-			new File(fileCopyLocation).mkdirs();			
-			try {
-				FileUtils.copyFile(scrFile, new File(fileCopyLocation + "/" + destFile));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
 			log("screenShot: " + destDir + "/" + destFile, false);
 			// Display screenshot to ReportNG
 			if (addReport) {
@@ -426,11 +416,7 @@ public class library {
 				output.write(reportBytes);
 				output.close();
 								
-				//copies report to 2nd directory for local debug
-				String fileCopyLocation="./test-output/html/screenshots/";				
-				File reportFileCopy = new File(fileCopyLocation + file + "." + type);
-				new File(fileCopyLocation).mkdirs();				
-				FileUtils.copyFile(reportFile, reportFileCopy);
+			
 			}
 			
 		

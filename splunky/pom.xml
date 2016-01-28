@@ -57,7 +57,7 @@
 			<dependency>
   		<groupId>velocity</groupId>
   		<artifactId>velocity-dep</artifactId>
-  		<version>1.4</version>
+  		<version>1.7</version>
   	</dependency>
 		<dependency>
 			<groupId>org.testng</groupId>
@@ -67,33 +67,33 @@
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-api</artifactId>
-			<version>2.47.0</version>
+			<version>2.49.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-support</artifactId>
-			<version>2.47.0</version>
+			<version>2.49.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-firefox-driver</artifactId>
-			<version>2.47.0</version>
+			<version>2.49.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
-			<version>2.47.0</version>
+			<version>2.49.1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-			<version>3.0</version>
-		</dependency>
+	<groupId>com.google.inject</groupId>
+	<artifactId>guice</artifactId>
+	<version>4.0</version>
+</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-		</dependency>
+	<groupId>junit</groupId>
+	<artifactId>junit</artifactId>
+	<version>4.12</version>
+</dependency>
 	</dependencies>
 	<build>
 		<plugins>

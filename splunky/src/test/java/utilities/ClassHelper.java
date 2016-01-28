@@ -80,7 +80,7 @@ public abstract class ClassHelper {
 				Reporter.setCurrentTestResult(testResult);
 				
 				lib.getDriver().close();
-				lib.downloadReportDisplay(lib.getDriver(), true);
+				lib.downloadReportDisplay(true);
 
 				getReport().reporting.put("executionID",
 						(String) lib.getDriver().getCapabilities().getCapability("executionId"));

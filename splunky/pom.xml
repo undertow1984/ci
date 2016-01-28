@@ -42,6 +42,13 @@
 		</pluginRepository>
 	</pluginRepositories>
 	<dependencies>
+<dependency>
+    <groupId>sample</groupId>
+    <artifactId>com.sample</artifactId>
+    <version>1.0</version>
+    <scope>system</scope>
+    <systemPath>${project.basedir}/lib/PerfectoSplunk.jar</systemPath>
+</dependency>
 		<dependency>
 			<groupId>org.uncommons</groupId>
 			<artifactId>reportng</artifactId>

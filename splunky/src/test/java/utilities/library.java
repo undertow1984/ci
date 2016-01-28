@@ -295,67 +295,58 @@ public class library {
 		return timerGet("ux");
 	}
 
-	// takes screen shot of non-device platforms
-	// String param is text associated with screen shot
-	// boolean will either add to report or not
 	public void takeScreen(String text, Boolean addReport) {
-		if (lastStep != step) {
-			if (isDevice()) {
-				long time = getUXTimer();
-				ReportingManager.getReporting().reporting.put("testType", "MobileDevice");
-				// builds the steps json in reporting class
-				// params
-				// high level step and/or step name - in my usage i do Step_1 /
-				// Step_2 etc
-				// step description / more details step details
-				// response time of the step in question
-				// pass fail on the backend will be determined by the sla
-				// submitted upon setup
-				ReportingManager.getReporting().setStepDetails("Step_" + step, text, time);
-			} else {
-				ReportingManager.getReporting().reporting.put("testType", "Desktop");
-				ReportingManager.getReporting().setStepDetails("Step_" + step, text, null);
-			}
-		}
 
 		log(text, false);
 
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (!isDevice()) {
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			// set file name and destination for screen shot
+			File scrFile = ((TakesScreenshot) driver)
+					.getScreenshotAs(OutputType.FILE);
+			DateFormat dateFormat = new SimpleDateFormat(
+					"dd_MMM_yyyy__hh_mm_ssaa");
+			String destDir = "./surefire-reports/html/screenshots/";
+			new File(destDir).mkdirs();
+			String destFile = testName + "_" + target + "_" + getNetwork()
+					+ "_Step" + step + "_" + dateFormat.format(new Date())
+					+ ".png";
+
+			// copy screen shot to directory for jenkins
+			try {
+				FileUtils.copyFile(scrFile, new File(destDir + "/" + destFile));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			//copys screen shot to 2nd directory for local debug
+			String fileCopyLocation="./test-output/html/screenshots/";						
+			new File(fileCopyLocation).mkdirs();			
+			try {
+				FileUtils.copyFile(scrFile, new File(fileCopyLocation + "/" + destFile));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			log("screenShot: " + destDir + "/" + destFile, false);
+			// Display screenshot to ReportNG
+			if (addReport) {
+
+				String userDirector = "./screenshots/";
+				log("<u><b>||||||" + text + "</b></u><br><a href=\""
+						+ userDirector + destFile + "\"><img src=\""
+						+ userDirector + destFile + "\" alt=\"\""
+						+ "height='100' width='100'/> " + "<br />", addReport);
+			}
 		}
-
-		// set file name and destination for screen shot
-		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-		DateFormat dateFormat = new SimpleDateFormat("dd_MMM_yyyy__hh_mm_ssaa");
-		String destDir = "./surefire-reports/html/screenshots/";
-		new File(destDir).mkdirs();
-		String destFile = testName.replace(" ", "_") + "_" + target.replace(" ", "_") + "_"
-				+ getNetwork().replace(" ", "_") + "_Step" + step + "_" + dateFormat.format(new Date()) + ".png";
-
-		// copy screen shot to directory
-		try {
-			FileUtils.copyFile(scrFile, new File(destDir + "/" + destFile));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		log("screenShot: " + destDir + "/" + destFile, false);
-		// Display screenshot to ReportNG
-		if (addReport) {
-
-			log("<u><b>||||||" + text + "</b></u><br><a href=\"" + "../../" + destDir + destFile + "\"><img src=\""
-					+ "../../" + destDir + destFile + "\" alt=\"\"" + "height='100' width='100'/> " + "<br />",
-					addReport);
-		}
-
 	}
-
-
-
-
 
 	// writes to console or/and report log
 	// boolean controls whether report log is written to
@@ -365,52 +356,72 @@ public class library {
 		if (addReport) {
 			final String ESCAPE_PROPERTY = "org.uncommons.reportng.escape-output";
 			System.setProperty(ESCAPE_PROPERTY, "false");
-			Reporter.log(text.replace("<u><b>||||||",
-					"<u><b>" + testName + "_" + target + "_" + getNetwork() + "_Step" + step + "_"));
+			Reporter.log(text.replace("<u><b>||||||", "<u><b>" + testName + "_"
+					+ target + "_" + getNetwork() + "_Step" + step + "_"));
 		} else {
-			System.out.println(testName + "_" + target + "_" + getNetwork() + "_Step" + step + "_" + text + newLine);
+			System.out.println(testName + "_" + target + "_" + getNetwork()
+					+ "_Step" + step + "_" + text + newLine);
 		}
 	}
 
 	// Calls downloadreport, copys the perfecto report to the screen directory
 	// boolean will add the report to the testNG report
-	public void downloadReportDisplay(RemoteWebDriver driver, Boolean addReport) throws IOException {
+	public void downloadReportDisplay(Boolean addReport) throws IOException {
 
-		// set file format and destination for report
-		DateFormat dateFormat = new SimpleDateFormat("dd_MMM_yyyy__hh_mm_ssaa");
-		String destDir = "./surefire-reports/html/screenshots/";
-		new File(destDir).mkdirs();
-		String destFile = dateFormat.format(new Date());
+		if (isDevice()) {
+			// set file format and destination for report
+			DateFormat dateFormat = new SimpleDateFormat(
+					"dd_MMM_yyyy__hh_mm_ssaa");
+			String destDir = "./surefire-reports/html/screenshots/";
+			new File(destDir).mkdirs();
+			String destFile = dateFormat.format(new Date());
 
-		// download report from driver
-		downloadReport(driver, "pdf", destDir + "/" + destFile);
+			// download report
+			downloadReport("pdf", destDir , destFile);
+			// Display screenshot to ReportNG
+			String userDirector = "./screenshots/";
 
-		// Display screenshot to ReportNG
-		String userDirector = "./screenshots/";
+			String destFileNew = destFile + ".pdf";
 
-		String destFileNew = destFile + ".pdf";
-
-		log("perfectoReport: " + userDirector + destFileNew, false);
-		if (addReport) {
-			log("<a href=\"" + "../../" + destDir + destFileNew + "\">" + testName.replace(" ", "_") + "_"
-					+ target.replace(" ", "_") + "_" + getNetwork().replace(" ", "_") + " Perfecto Report</a><br />",
-					addReport);
+			log("perfectoReport: " + userDirector + destFileNew, false);
+			if (addReport) {
+				log("<a href=\"" + userDirector + destFileNew
+						+ "\">Perfecto Report</a><br />", addReport);
+			}
 		}
 	}
 
 	// download report from perfecto
-	private void downloadReport(RemoteWebDriver driver, String type, String fileName) throws IOException {
-		// downloads report from perfecto
-		String command = "mobile:report:download";
-		Map<String, Object> params = new HashMap<>();
-		params.put("type", type);
-		String report = (String) driver.executeScript(command, params);
-		File reportFile = new File(fileName + "." + type);
-		BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(reportFile));
-		byte[] reportBytes = OutputType.BYTES.convertFromBase64Png(report);
-		output.write(reportBytes);
-		output.close();
-
+	private void downloadReport(String type, String fileLocation, String file)
+			throws IOException {
+		if (isDevice()) {
+			
+			
+				// downloads report for remote web driver
+				String command = "mobile:report:download";
+				Map<String, Object> params = new HashMap<>();
+				params.put("type", type);
+				String report;				
+					report = (String) getDriver().executeScript(
+							command, params);
+					
+				//download to directory for jenkins
+				File reportFile = new File(fileLocation + "/" + file + "." + type);
+				BufferedOutputStream output = new BufferedOutputStream(
+						new FileOutputStream(reportFile));
+				byte[] reportBytes = OutputType.BYTES
+						.convertFromBase64Png(report);
+				output.write(reportBytes);
+				output.close();
+								
+				//copies report to 2nd directory for local debug
+				String fileCopyLocation="./test-output/html/screenshots/";				
+				File reportFileCopy = new File(fileCopyLocation + file + "." + type);
+				new File(fileCopyLocation).mkdirs();				
+				FileUtils.copyFile(reportFile, reportFileCopy);
+			}
+			
+		
 	}
 
 	// sets the initial page for the browser

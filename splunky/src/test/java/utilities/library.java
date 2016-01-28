@@ -296,16 +296,28 @@ public class library {
 	}
 
 	public void takeScreen(String text, Boolean addReport) {
-
-		log(text, false);
-
-		if (!isDevice()) {
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		if(lastStep!=step)
+		{
+			if(isDevice())
+			{			
+				long time = getUXTimer();	
+				ReportingManager.getReporting().reporting.put("testType", "MobileDevice");
+				//builds the steps json in reporting class
+				//params
+				//high level step and/or step name - in my usage i do Step_1 / Step_2 etc
+				//step description / more details step details
+				//response time of the step in question
+				//pass fail on the backend will be determined by the sla submitted upon setup
+				ReportingManager.getReporting().setStepDetails("Step_" + step, text, time);
 			}
+			else
+			{
+				ReportingManager.getReporting().reporting.put("testType", "Desktop");
+				ReportingManager.getReporting().setStepDetails("Step_" + step,text, null);
+			}
+		}
+		
+		log(text, false);
 
 			// set file name and destination for screen shot
 			File scrFile = ((TakesScreenshot) driver)
@@ -345,7 +357,7 @@ public class library {
 						+ userDirector + destFile + "\" alt=\"\""
 						+ "height='100' width='100'/> " + "<br />", addReport);
 			}
-		}
+		
 	}
 
 	// writes to console or/and report log

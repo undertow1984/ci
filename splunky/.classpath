@@ -21,6 +21,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/jeremy/workspaceSplunk/splunky/lib/PerfectoSplunk.jar"/>
+	<classpathentry kind="lib" path="lib/PerfectoSplunk.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

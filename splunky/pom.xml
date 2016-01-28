@@ -6,11 +6,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<repositories>
 		<repository>
-			<id>perfectomobile</id>
-			<name>Perfecto mobile</name>
-			<url>http://repository-perfectomobile.forge.cloudbees.com/public</url>
-		</repository>
-		<repository>
 			<id>central</id>
 			<name>Repo1</name>
 			<url>http://repo1.maven.org/maven2</url>

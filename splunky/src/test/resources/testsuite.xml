@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite" parallel="tests" thread-count="10" verbose="1" configfailurepolicy="skip">
+ <listeners>
+	  <listener class-name="org.uncommons.reportng.HTMLReporter"/>
+      <listener class-name="org.uncommons.reportng.JUnitXMLReporter"/>
+       <listener class-name="utilities.TestListener" />
+  </listeners>
+     <!-- 
+  <test name="Test Chrome implicitNotVisible">
+  <parameter name="targetEnvironment" value="Chrome" />
+   <parameter name="network" value="" />
+   <parameter name="networkLatency" value="" />
+    <classes>
+      <class name="AmazonTesting.SleepTestSystem">
+       <methods>
+     <include name="implicitNotVisible" />
+    	</methods>
+    	</class>
+    </classes>   
+  </test>
+
+  <test name="Test Chrome explicitNotVisible">
+  <parameter name="targetEnvironment" value="Chrome" />
+   <parameter name="network" value="" />
+   <parameter name="networkLatency" value="" />
+    <classes>
+      <class name="AmazonTesting.SleepTestSystem">
+       <methods>
+     <include name="explicitNotVisible" />
+    	</methods>
+    	</class>
+    </classes>   
+  </test>
+     <test name="Test Chrome implicitConflict">
+  <parameter name="targetEnvironment" value="Chrome" />
+   <parameter name="network" value="" />
+   <parameter name="networkLatency" value="" />
+    <classes>
+      <class name="AmazonTesting.SleepTestSystem">
+       <methods>
+     <include name="implicitConflict" />
+    	</methods>
+    	</class>
+    </classes>   
+  </test>
+
+   <test name="Test Chrome implicitConflictFixed">
+  <parameter name="targetEnvironment" value="Chrome" />
+   <parameter name="network" value="" />
+   <parameter name="networkLatency" value="" />
+    <classes>
+      <class name="AmazonTesting.SleepTestSystem">
+       <methods>
+     <include name="implicitConflictFixed" />
+    	</methods>
+    	</class>
+    </classes>   
+  </test>
+  <test name="Test Chrome implicitTest">
+  <parameter name="targetEnvironment" value="Chrome" />
+   <parameter name="network" value="" />
+   <parameter name="networkLatency" value="" />
+    <classes>
+      <class name="AmazonTesting.SleepTestSystem">
+       <methods>
+     <include name="implicitTest" />
+    	</methods>
+    	</class>
+    </classes>   
+  </test>
+   <test name="Test Chrome fluentWait">
+  <parameter name="targetEnvironment" value="Chrome" />
+   <parameter name="network" value="" />
+   <parameter name="networkLatency" value="" />
+    <classes>
+      <class name="AmazonTesting.SleepTestSystem">
+       <methods>
+     <include name="fluentWait" />
+    	</methods>
+    	</class>
+    </classes>   
+  </test>
+  
+  <test name="Test Chrome implicitConditional">
+  <parameter name="targetEnvironment" value="Chrome" />
+   <parameter name="network" value="" />
+   <parameter name="networkLatency" value="" />
+    <classes>
+      <class name="AmazonTesting.SleepTestSystem">
+       <methods>
+     <include name="implicitConditional" />
+    	</methods>
+    	</class>
+    </classes>   
+  </test>
+   <test name="Test Chrome implicitConditionalFixed">
+  <parameter name="targetEnvironment" value="Chrome" />
+   <parameter name="network" value="" />
+   <parameter name="networkLatency" value="" />
+    <classes>
+      <class name="AmazonTesting.SleepTestSystem">
+       <methods>
+     <include name="implicitConditionalFixed" />
+    	</methods>
+    	</class>
+    </classes>   
+  </test> 
+-->
+ 
+    <test name="Test Galaxy S6 4G">
+  <parameter name="targetEnvironment" value="Galaxy S6" />
+  <parameter name="network" value="4G" />
+  <parameter name="networkLatency" value="200" />
+    <classes>
+      <class name="AmazonTesting.AmazonTestSystem"/>
+    </classes>
+  </test>
+  
+<!-- 
+      <test name="Test iPhone 6 4G">
+  <parameter name="targetEnvironment" value="iPhone-6" />
+   <parameter name="network" value="4G" />
+   <parameter name="networkLatency" value="200" />
+    <classes>
+      <class name="AmazonTesting.AmazonTestSystem"/>
+    </classes>
+  </test>  
+  
+  
+     <test name="Test Galaxy S5 WIFI">
+  <parameter name="targetEnvironment" value="Galaxy S5" />
+  <parameter name="network" value="WIFI" />
+  <parameter name="networkLatency" value="" />
+    <classes>
+      <class name="AmazonTesting.AmazonTestSystem"/>
+    </classes>
+  </test>
+      <test name="Test iPhone 6 WIFI">
+  <parameter name="targetEnvironment" value="iPhone-6" />
+<parameter name="network" value="WIFI" />
+  <parameter name="networkLatency" value="" />
+    <classes>
+      <class name="AmazonTesting.AmazonTestSystem"/>
+    </classes>
+  </test> 
+  -->
+</suite> <!-- Suite -->

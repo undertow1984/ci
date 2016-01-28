@@ -57,6 +57,7 @@
 			<dependency>
   		<groupId>velocity</groupId>
   		<artifactId>velocity-dep</artifactId>
+  		<scope>repo1</scope>
   		<version>1.7</version>
   	</dependency>
 		<dependency>

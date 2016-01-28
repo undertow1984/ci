@@ -4,7 +4,29 @@
 	<groupId>splunky</groupId>
 	<artifactId>splunky</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	
+	<repositories>
+		<repository>
+			<id>perfectomobile</id>
+			<name>Perfecto mobile</name>
+			<url>http://repository-perfectomobile.forge.cloudbees.com/public</url>
+		</repository>
+		<repository>
+			<id>central</id>
+			<name>Repo1</name>
+			<url>http://repo1.maven.org/maven2</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<url>http://repo.spring.io/libs-milestone/</url>
+		</repository>
+	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
 			<id>central</id>
@@ -32,11 +54,12 @@
 			<artifactId>reportng</artifactId>
 			<version>1.1.4</version>
 		</dependency>
-			<dependency>
-  		<groupId>velocity</groupId>
-  		<artifactId>velocity-dep</artifactId>
-  		<version>1.5</version>
-  	</dependency>
+<dependency>
+	<groupId>org.apache.velocity</groupId>
+	<artifactId>velocity</artifactId>
+	<version>1.7</version>
+</dependency>
+
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>

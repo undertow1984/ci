@@ -157,7 +157,7 @@ public class TestListener implements ISuiteListener, ITestListener, IInvokedMeth
 			// if null testName – methodName is used
 			// otherwise custom title can be used
 
-			splunkReport.submitReporting(null, "test", "test_index");
+			splunkReport.submitReporting("PerfectoTest", "test", "test_index");
 		}
 
 	}

@@ -104,7 +104,7 @@
 				<version>2.19.1</version>
 				<configuration>
 					<suiteXmlFiles>
-						<suiteXmlFile>src/test/resources/testsuite.xml</suiteXmlFile>
+						<suiteXmlFile>${suiteXML}</suiteXmlFile>
 					</suiteXmlFiles>
                 	<workingDirectory>target/</workingDirectory>
             	</configuration>

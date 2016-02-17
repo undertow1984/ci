@@ -103,7 +103,7 @@ public abstract class ClassHelper {
 
 		// Submits the report to splunk in json format
 		if (!(testResult.getStatus() == ITestResult.SKIP)) {
-			getReport().submitReporting(null, "testNew", "test_index");
+			getReport().submitReporting("PerfectoTest", "testNew", "test_index");
 			
 		}
 

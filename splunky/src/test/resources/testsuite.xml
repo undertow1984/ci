@@ -6,7 +6,7 @@
       <listener class-name="org.uncommons.reportng.JUnitXMLReporter"/>
        <listener class-name="utilities.TestListener" />
   </listeners>
-     <!-- 
+   <!--  
   <test name="Test Chrome implicitNotVisible">
   <parameter name="targetEnvironment" value="Chrome" />
    <parameter name="network" value="" />
@@ -107,7 +107,6 @@
     </classes>   
   </test> 
 -->
- 
     <test name="Test Galaxy S6 4G">
   <parameter name="targetEnvironment" value="Galaxy S6" />
   <parameter name="network" value="4G" />
@@ -116,8 +115,7 @@
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test>
-  
-<!-- 
+ 
       <test name="Test iPhone 6 4G">
   <parameter name="targetEnvironment" value="iPhone-6" />
    <parameter name="network" value="4G" />
@@ -144,5 +142,5 @@
       <class name="AmazonTesting.AmazonTestSystem"/>
     </classes>
   </test> 
-  -->
+ 
 </suite> <!-- Suite -->

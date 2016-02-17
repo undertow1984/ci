@@ -60,22 +60,22 @@ public class AmazonTestSystem extends ClassHelper {
 			lib.log("Going to amazon.com", false);
 			lib.goToPage("http://amazon.com", "Amazon.com");
 
-			/*
-			 * lib.log("Checking if Chrome needs acceptance",false);
-			 * android.chromeFirstOpenAccepteance(60);
-			 * 
+			
+			 lib.log("Checking if Chrome needs acceptance",false);
+			 android.chromeFirstOpenAccepteance(60);
+			 /* 
 			 * if (lib.getDriver().findElementsByXPath(
 			 * "//*[@data-nav-tabindex='9' or @data-nav-tabindex='10' or @data-nav-tabindex='12']"
 			 * ).size() == 3) {
 			 * 
-			 * }
+			 * }*/
 			 
-
+/*
 			lib.log("Enter book into search box", false);
 			homePage.searchBoxText("Army of darkness volume one", 60);
 			
-			lib.waitForElement(20, byFields.xpath, "//*[text()='@#$#@']");*/
-
+			lib.waitForElement(20, byFields.xpath, "//*[text()='@#$#@']");
+*/
 			//lib.log("Searching for book", false);
 			//homePage.searchBoxSubmit(60);
 			/*

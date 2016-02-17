@@ -396,9 +396,7 @@ public class library {
 	// download report from perfecto
 	private void downloadReport(String type, String fileLocation, String file)
 			throws IOException {
-		if (isDevice()) {
-			
-			
+		if (isDevice()) {		
 				// downloads report for remote web driver
 				String command = "mobile:report:download";
 				Map<String, Object> params = new HashMap<>();
@@ -414,12 +412,8 @@ public class library {
 				byte[] reportBytes = OutputType.BYTES
 						.convertFromBase64Png(report);
 				output.write(reportBytes);
-				output.close();
-								
-			
-			}
-			
-		
+				output.close();	
+			}		
 	}
 
 	// sets the initial page for the browser

@@ -98,6 +98,7 @@ public class testSetup {
 		if (device) {
 			capabilities.setCapability("windTunnelPersona", "Georgia");
 			capabilities.setCapability("outputVisibility", "public");	
+			capabilities.setCapability("scriptName", "JeremyTest");	
 			host = "demo.perfectomobile.com";
 			String user = URLEncoder.encode("jeremyp@perfectomobile.com", "UTF-8");
 			String password = URLEncoder.encode("perfecto123", "UTF-8");

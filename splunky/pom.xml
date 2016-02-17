@@ -47,7 +47,7 @@
     <artifactId>com.sample</artifactId>
     <version>1.0</version>
     <scope>system</scope>
-    <systemPath>${project.basedir}/lib/PerfectoSplunk.jar</systemPath>
+    <systemPath>${project.basedir}/lib/PerfectoSplunka.jar</systemPath>
 </dependency>
 		<dependency>
 			<groupId>org.uncommons</groupId>

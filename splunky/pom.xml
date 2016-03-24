@@ -42,36 +42,33 @@
 		</pluginRepository>
 	</pluginRepositories>
 	<dependencies>
-<dependency>
-    <groupId>sample</groupId>
-    <artifactId>com.sample</artifactId>
-    <version>1.0</version>
-    <scope>system</scope>
-    <systemPath>${project.basedir}/src/test/resources/PerfectoSplunk.jar</systemPath>
-</dependency>
-<dependency>
-    <groupId>sample</groupId>
-    <artifactId>com.sample2</artifactId>
-    <version>1.0</version>
-    <scope>system</scope>
-<systemPath>${project.basedir}/src/test/resources/testng-6.9.11-SNAPSHOT.jar</systemPath>
-</dependency>
+		<dependency>
+			<groupId>sample</groupId>
+			<artifactId>com.sample</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/test/resources/PerfectoSplunk.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>sample</groupId>
+			<artifactId>com.sample2</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/test/resources/testng-6.9.11-SNAPSHOT.jar</systemPath>
+		</dependency>
 		<dependency>
 			<groupId>org.uncommons</groupId>
 			<artifactId>reportng</artifactId>
 			<version>1.1.4</version>
 		</dependency>
-<dependency>
-	<groupId>org.apache.velocity</groupId>
-	<artifactId>velocity</artifactId>
-	<version>1.7</version>
-</dependency>
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.7</version>
+		</dependency>
 
-<!-- 		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>6.9.10</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.testng</groupId> <artifactId>testng</artifactId> 
+			<version>6.9.10</version> </dependency> -->
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-api</artifactId>
@@ -93,23 +90,25 @@
 			<version>2.49.1</version>
 		</dependency>
 		<dependency>
-	<groupId>com.google.inject</groupId>
-	<artifactId>guice</artifactId>
-	<version>4.0</version>
-</dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>4.0</version>
+		</dependency>
 		<dependency>
-	<groupId>junit</groupId>
-	<artifactId>junit</artifactId>
-	<version>4.12</version>
-</dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
-						<plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.19.1</version>
-				<configuration>					
+				<configuration>					 
+					<parallel>tests</parallel>					          
+					<threadCount>10</threadCount>
 					<property>
 						<name>parallel</name>
 						<value>tests</value>
@@ -117,12 +116,12 @@
 					<property>
 						<name>threadCount</name>
 						<value>2</value>
-					</property>				
+					</property>
 					<suiteXmlFiles>
 						<suiteXmlFile>${suiteXML}</suiteXmlFile>
 					</suiteXmlFiles>
-                	<workingDirectory>target/</workingDirectory>
-            	</configuration>
+					<workingDirectory>target/</workingDirectory>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

@@ -48,14 +48,7 @@
 			<version>1.0</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/test/resources/PerfectoSplunk.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>sample</groupId>
-			<artifactId>com.sample2</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/src/test/resources/testng-6.9.11-SNAPSHOT.jar</systemPath>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>org.uncommons</groupId>
 			<artifactId>reportng</artifactId>
@@ -67,8 +60,8 @@
 			<version>1.7</version>
 		</dependency>
 
-		<!-- <dependency> <groupId>org.testng</groupId> <artifactId>testng</artifactId> 
-			<version>6.9.10</version> </dependency> -->
+		<dependency> <groupId>org.testng</groupId> <artifactId>testng</artifactId> 
+			<version>6.9.6</version> </dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-api</artifactId>

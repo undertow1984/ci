@@ -103,20 +103,8 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.19.1</version>
 				<configuration>
-					<systemPropertyVariables>
-						<repoKey>${env.repoKey}</repoKey>
-						<jenkinsHost>${env.jenkinsHost}</jenkinsHost>
-						<jenkinsPort>${env.jenkinsPort}</jenkinsPort>
-						<jenkinsJobName>${env.jenkinsJob}</jenkinsJobName>
-						<targetEnvironment>${env.targetEnvironment}</targetEnvironment>
-						<perfectoHost>${env.perfectoHost}</perfectoHost>
-						<perfectoUsername>${env.perfectoUsername}</perfectoUsername>
-						<perfectoPassword>${env.perfectoPassword}</perfectoPassword>
-						<appName>${env.appName}</appName>
-						<instrument>${env.instrument}</instrument>
-					</systemPropertyVariables>
 					<suiteXmlFiles>
-						<suiteXmlFile>src/test/resources/testsuite.xml</suiteXmlFile>
+						<suiteXmlFile>src/test/resources/${env.suiteXML}</suiteXmlFile>
 					</suiteXmlFiles>
 					<skipTests>false</skipTests>
 					<testFailureIgnore>true</testFailureIgnore>

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-
-
 <suite name="Suite" parallel="tests" thread-count="2" verbose="1"
 	configfailurepolicy="skip">
 	<listeners>
@@ -10,14 +8,13 @@
 		<listener class-name="utilities.TestListener" />
 	</listeners>
 	<parameter name="targetEnvironment" value="Galaxy S6" />
-		<parameter name="perfectoHost" value="demo.perfectomobile.com" />
-		<parameter name="perfectoUsername" value="username" />
-		<parameter name="perfectoPassword" value="password" />
-		<!--  info on repo key https://community.perfectomobile.com/posts/941431 -->
-		<parameter name="repoKey" value="Private:" />
-		<parameter name="jenkinsHost" value="localhost" />
-		<parameter name="jenkinsPort" value="8080" />
-		<parameter name="jenkinsJobName" value="FakeBuild" />
+	<parameter name="perfectoHost" value="demo.perfectomobile.com" />
+	<parameter name="perfectoUsername" value="username" />
+	<parameter name="perfectoPassword" value="password" />
+	<parameter name="repoKey" value="Private:" />
+	<parameter name="jenkinsHost" value="localhost" />
+	<parameter name="jenkinsPort" value="8080" />
+	<parameter name="jenkinsJobName" value="FakeBuild" />
 	<test name="Test Galaxy S6">
 		<parameter name="targetEnvironment" value="Galaxy S6" />
 		<parameter name="perfectoHost" value="demo.perfectomobile.com" />
@@ -29,6 +26,6 @@
 		<classes>
 			<class name="tests.TestSystem" />
 		</classes>
-	</test>	
+	</test>
 
 </suite>

@@ -93,7 +93,7 @@
 						<instrument>${env.instrument}</instrument>
 					</systemPropertyVariables>
 					<suiteXmlFiles>
-						<suiteXmlFile>${basedir}/${env.testNGFile}</suiteXmlFile>
+						<suiteXmlFile>${env.testNGFile}</suiteXmlFile>
 					</suiteXmlFiles>
 					<skipTests>false</skipTests>
 					<testFailureIgnore>true</testFailureIgnore>

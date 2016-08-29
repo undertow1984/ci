@@ -34,11 +34,10 @@ public abstract class ClassHelper {
 	private static String build;
 	private static String repoKey;
 	public String appName;
-	
-		
+
 	@BeforeSuite
 	@Parameters({ "targetEnvironment", "perfectoHost", "perfectoUsername", "perfectoPassword", "repoKey", "jenkinsHost",
-			"jenkinsPort","jenkinsJobName" })
+			"jenkinsPort", "jenkinsJobName" })
 	public void beforeSuite(String targetEnvironment, String perfectoHost, String perfectoUsername,
 			String perfectoPassword, String repo, String jenkinsHost, String jenkinsPort, String jenkinsJobName) {
 
@@ -48,8 +47,8 @@ public abstract class ClassHelper {
 			HttpClient hc = new HttpClient();
 			String response = "";
 			try {
-				response = hc.sendRequest(
-						"http://" + jenkinsHost + ":" + jenkinsPort + "/job/"+jenkinsJobName+"/lastStableBuild/api/xml");
+				response = hc.sendRequest("http://" + jenkinsHost + ":" + jenkinsPort + "/job/" + jenkinsJobName
+						+ "/lastStableBuild/api/xml");
 			} catch (IOException | URISyntaxException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -66,29 +65,36 @@ public abstract class ClassHelper {
 			repoKey = build;
 
 			File buildFile = new File(localBuildPath);
-			if (!buildFile.exists()) {
-
-				try {
-					hc.download("http://" + jenkinsHost + ":" + jenkinsPort + "/job/"+jenkinsJobName+"/lastStableBuild/artifact/" + build,
-							localBuildPath);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
 
 			try {
 				if (!hc.repoFileExists(perfectoHost, perfectoUsername, perfectoPassword, repo, build)) {
+
+					if (!buildFile.exists()) {
+
+						try {
+							hc.download("http://" + jenkinsHost + ":" + jenkinsPort + "/job/" + jenkinsJobName
+									+ "/lastStableBuild/artifact/" + build, localBuildPath);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+
 					try {
-						hc.uploadMedia(perfectoHost, perfectoUsername, perfectoPassword, buildFile, repoKey);
-					} catch (IOException e) {
+							try {
+								hc.uploadMedia(perfectoHost, perfectoUsername, perfectoPassword, buildFile, repoKey);
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+					} catch (Exception e1) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						e1.printStackTrace();
 					}
 				}
-			} catch (Exception e1) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				e.printStackTrace();
 			}
 		}
 	}
@@ -103,11 +109,12 @@ public abstract class ClassHelper {
 
 	}
 
-	@Parameters({ "targetEnvironment", "perfectoHost", "perfectoUsername", "perfectoPassword", "instrument", "appName" })
+	@Parameters({ "targetEnvironment", "perfectoHost", "perfectoUsername", "perfectoPassword", "instrument",
+			"appName" })
 	@BeforeMethod(alwaysRun = true)
 	public void beforeMethod(Method method, String targetEnvironment, String perfectoHost, String perfectoUsername,
 			String perfectoPassword, boolean instrument, String appName) {
-		this.appName=appName;
+		this.appName = appName;
 		// initializes testSetup class
 		tes = new TestSetup(targetEnvironment, perfectoHost, perfectoUsername, perfectoPassword, driver);
 		// sets up the testNG flows based on testsuite.xml
@@ -120,9 +127,9 @@ public abstract class ClassHelper {
 		}
 
 		lib.installApp(repoKey, false);
-		
+
 		lib.closeApp(appName);
-		lib.launchApp(appName);		
+		lib.launchApp(appName);
 
 		String testName = method.getDeclaringClass().getSimpleName() + "::" + method.getName();
 

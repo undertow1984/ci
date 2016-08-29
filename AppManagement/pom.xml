@@ -110,7 +110,7 @@
 						<instrument>${env.instrument}</instrument>
 					</systemPropertyVariables>
 					<suiteXmlFiles>
-						<suiteXmlFile>src/test/resources/${env.testNGFile}</suiteXmlFile>
+						<suiteXmlFile>src/test/resources/testsuite.xml</suiteXmlFile>
 					</suiteXmlFiles>
 					<skipTests>false</skipTests>
 					<testFailureIgnore>true</testFailureIgnore>

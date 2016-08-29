@@ -7,22 +7,21 @@
 		<listener class-name="org.uncommons.reportng.JUnitXMLReporter" />
 		<listener class-name="utilities.TestListener" />
 	</listeners>
-	<parameter name="targetEnvironment" value="Galaxy S6" />
+	<parameter name="targetEnvironment" value="" />
 	<parameter name="perfectoHost" value="" />
-	<parameter name="perfectoUsername" value="username" />
-	<parameter name="perfectoPassword" value="password" />
-	<parameter name="repoKey" value="Private:" />
-	<parameter name="jenkinsHost" value="localhost" />
-	<parameter name="jenkinsPort" value="8080" />
-	<parameter name="jenkinsJobName" value="FakeBuild" />
+	<parameter name="perfectoUsername" value="" />
+	<parameter name="perfectoPassword" value="" />
+	<parameter name="repoKey" value="" />
+	<parameter name="jenkinsHost" value="" />
+	<parameter name="jenkinsPort" value="" />
+	<parameter name="jenkinsJobName" value="" />
 	<test name="Test Galaxy S6">
-		<parameter name="targetEnvironment" value="Galaxy S6" />
-		<parameter name="perfectoHost" value="demo.perfectomobile.com" />
-		<parameter name="perfectoUsername" value="username" />
-		<parameter name="perfectoPassword" value="password" />
-		<parameter name="appName" value="appName" />
-		<parameter name="instrument" value="false" />
-		<parameter name="" value="" />
+		<parameter name="targetEnvironment" value="" />
+		<parameter name="perfectoHost" value="" />
+		<parameter name="perfectoUsername" value="" />
+		<parameter name="perfectoPassword" value="" />
+		<parameter name="appName" value="" />
+		<parameter name="instrument" value="" />
 		<classes>
 			<class name="tests.TestSystem" />
 		</classes>

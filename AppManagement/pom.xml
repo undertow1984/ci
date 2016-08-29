@@ -93,7 +93,7 @@
 						<instrument>${env.instrument}</instrument>
 					</systemPropertyVariables>
 					<suiteXmlFiles>
-						<suiteXmlFile>${env.testNGFile}</suiteXmlFile>
+						<suiteXmlFile>${basedir}/src/test/resources/testng.xml</suiteXmlFile>
 					</suiteXmlFiles>
 					<skipTests>false</skipTests>
 					<testFailureIgnore>true</testFailureIgnore>

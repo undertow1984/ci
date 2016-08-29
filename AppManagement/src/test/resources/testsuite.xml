@@ -8,7 +8,7 @@
 		<listener class-name="utilities.TestListener" />
 	</listeners>
 	<parameter name="targetEnvironment" value="Galaxy S6" />
-	<parameter name="perfectoHost" value="demo.perfectomobile.com" />
+	<parameter name="perfectoHost" value="" />
 	<parameter name="perfectoUsername" value="username" />
 	<parameter name="perfectoPassword" value="password" />
 	<parameter name="repoKey" value="Private:" />

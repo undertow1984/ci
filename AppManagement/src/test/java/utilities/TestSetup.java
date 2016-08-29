@@ -37,32 +37,19 @@ public class TestSetup {
 	// sets capabilities based on environment returned from testNG
 	public void flowControl() {
 		switch (target) {
-		case "iPad Mini":
-			device = true;
-			capabilities.setCapability("platformName", "iOS");
-			capabilities.setCapability("model", "iPad Mini 2");
-			capabilities.setCapability("browserName", "Safari");
-			capabilities.setCapability("automationName", "PerfectoMobile");
-			break;
 		case "Galaxy S6":
 			device = true;
 			capabilities.setCapability("platformName", "Android");
 			capabilities.setCapability("model", "Galaxy S6");
 			capabilities.setCapability("browserName", "Chrome");
 			capabilities.setCapability("automationName", "PerfectoMobile");
+			capabilities.setCapability("description", "Jeremy");
 			break;
 		case "iPhone-6":
 			device = true;
 			capabilities.setCapability("platformName", "iOS");
 			capabilities.setCapability("model", "iPhone-6");
 			capabilities.setCapability("browserName", "");
-			capabilities.setCapability("automationName", "PerfectoMobile");
-			break;
-		case "Galaxy Tab":
-			device = true;
-			capabilities.setCapability("platformName", "Android");
-			capabilities.setCapability("model", "SCH-I705 Galaxy Tab 2");
-			capabilities.setCapability("browserName", "mobileChrome");
 			capabilities.setCapability("automationName", "PerfectoMobile");
 			break;
 		case "Firefox":

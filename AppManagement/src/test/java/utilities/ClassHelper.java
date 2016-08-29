@@ -11,6 +11,8 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -32,6 +34,8 @@ public abstract class ClassHelper {
 	private static String build;
 	private static String repoKey;
 	public String appName;
+	
+		
 	@BeforeSuite
 	@Parameters({ "targetEnvironment", "perfectoHost", "perfectoUsername", "perfectoPassword", "repoKey", "jenkinsHost",
 			"jenkinsPort","jenkinsJobName" })

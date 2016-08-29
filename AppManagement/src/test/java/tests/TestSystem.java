@@ -32,7 +32,7 @@ public class TestSystem extends ClassHelper {
 	}
 
 	@Test
-	public void LaunchApp() throws Exception {
+	public void LaunchPage() throws Exception {
 		setPagesAndHelpers(lib);
 		
 		//do something!

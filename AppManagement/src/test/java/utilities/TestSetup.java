@@ -43,7 +43,6 @@ public class TestSetup {
 			capabilities.setCapability("model", "Galaxy S6");
 			capabilities.setCapability("browserName", "Chrome");
 			capabilities.setCapability("automationName", "PerfectoMobile");
-			capabilities.setCapability("description", "Jeremy");
 			break;
 		case "iPhone-6":
 			device = true;

@@ -32,10 +32,45 @@ public class TestSystem extends ClassHelper {
 	}
 
 	@Test
-	public void LaunchPage() throws Exception {
+	public void LoadFlights() throws Exception {
 		setPagesAndHelpers(lib);
+
+		if (lib.elementExists(byFields.xpath, "//*[text()=\"Please update!\"]")) {
+			lib.clickElement(byFields.xpath, "//*[@resourceid=\"android:id/button2\"]", 10);
+		}
+
+		lib.clickElement(byFields.xpath, "//*[text()=\"Flights\"]", 10);
 		
-		//do something!
+		lib.waitForElement(20, byFields.xpath, "//*[@resourceid=\"android:id/action_bar_title\"]");
+		
+	}
+
+	@Test
+	public void LoadHotels() throws Exception {
+		setPagesAndHelpers(lib);
+
+		if (lib.elementExists(byFields.xpath, "//*[text()=\"Please update!\"]")) {
+			lib.clickElement(byFields.xpath, "//*[@resourceid=\"android:id/button2\"]", 10);
+
+		}
+
+		lib.clickElement(byFields.xpath, "//*[text()=\"Hotels\"]", 10);
+		
+		lib.waitForElement(20, byFields.xpath, "//*[@resourceid=\"com.expedia.bookings:id/dates_button\"]");
+		
+	}
+
+	@Test
+	public void LoadCars() throws Exception {
+		setPagesAndHelpers(lib);
+
+		if (lib.elementExists(byFields.xpath, "//*[text()=\"Please update!\"]")) {
+			lib.clickElement(byFields.xpath, "//*[@resourceid=\"android:id/button2\"]", 10);
+
+		}
+
+		lib.clickElement(byFields.xpath, "//*[text()=\"Cars\"]", 10);
+		lib.waitForElement(20, byFields.xpath, "//*[@resourceid=\"com.expedia.bookings:id/pickup_location\"]");
 		
 	}
 }

@@ -46,7 +46,7 @@ public class PerfectoRunner {
 	}
 
 	public enum availableReportOptions {
-		scriptTimerElapsed, scriptTimerDevice, scriptTimerSystem, scriptTimerUx, scriptStartTime, scriptEndTime, executionId, reportId, scriptName, scriptStatus, deviceId, location, manufacturer, model, firmware, description, os, osVersion, transactions, reportUrl, xmlReport, variables
+		scriptTimerElapsed, scriptTimerDevice, scriptTimerSystem, scriptTimerUx, scriptStartTime, scriptEndTime, executionId, reportId, scriptName, scriptStatus, deviceId, location, manufacturer, model, firmware, description, os, osVersion, transactions, reportUrl, xmlReport, variables, exception
 	}
 
 	public String getXMLReport(String host, String username, String password, String reportKey)
@@ -57,7 +57,6 @@ public class PerfectoRunner {
 		} else {
 			hc = new HttpClient();
 		}
-		
 
 		String response = hc.sendRequest("https://" + host + "/services/reports/" + reportKey.replace(" ", "%20")
 				+ "?operation=download&user=" + username + "&password=" + password + "&responseformat=xml");
@@ -112,13 +111,12 @@ public class PerfectoRunner {
 		Map<availableReportOptions, Object> testResults = new HashMap<availableReportOptions, Object>();
 
 		testResults = parseReport(response, host);
-		
+
 		return testResults;
 	}
 
 	// parser for the report and compiles the reporting map
-	public Map<availableReportOptions, Object> parseReport(String xml, String host)
-			throws DOMException, Exception {
+	public Map<availableReportOptions, Object> parseReport(String xml, String host) throws DOMException, Exception {
 
 		DocumentBuilder newDocumentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		Document parse = newDocumentBuilder.parse(new ByteArrayInputStream(xml.getBytes()));
@@ -142,6 +140,24 @@ public class PerfectoRunner {
 		} else {
 			scriptStatus = "Fail";
 			testResults.put(availableReportOptions.scriptStatus, scriptStatus);
+
+			try {
+				NodeList nodeL8 = getXPathList(xml,
+						"//code[text()=\"CompletedWithErrors\"]/following-sibling::description[text()=\"FLOW_CHANGE_REQUESTED: Flow change initiated by script command - EXIT\"]/ancestor::output/ancestor::flow[2]/step[last()]/flow//output/status/description");
+				String exception = nodeL8.item(0).getTextContent();
+
+				testResults.put(availableReportOptions.exception, exception);
+			} catch (Exception ex) {
+				
+				
+				NodeList nodeL8 = getXPathList(xml,
+						"//output/status/code[text()=\"Failed\"]/following-sibling::description[text()!=\"Failed\"]");
+				String exception = nodeL8.item(0).getTextContent();
+
+				testResults.put(availableReportOptions.exception, exception);
+			}
+
+
 			if (!statusSub.getElementsByTagName("code").item(0).getTextContent().equals("CompletedWithErrors"))
 
 			{
@@ -158,39 +174,42 @@ public class PerfectoRunner {
 
 		testResults.put(availableReportOptions.executionId, executionId);
 		testResults.put(availableReportOptions.reportId, reportId);
-		testResults.put(availableReportOptions.scriptStartTime, getXPathValue(xml, "//execution/info/times/flowTimes/start/millis"));
-		testResults.put(availableReportOptions.scriptEndTime, getXPathValue(xml, "//execution/info/times/flowTimes/end/millis"));
-		
-		
-		testResults.put(availableReportOptions.scriptTimerElapsed, getXPathValue(xml, "//execution/output/timers/timer/time[@label=\"elapsed\"]"));
-		testResults.put(availableReportOptions.scriptTimerSystem, getXPathValue(xml, "//execution/output/timers/timer/time[@label=\"system\"]"));
-		testResults.put(availableReportOptions.scriptTimerDevice, getXPathValue(xml, "//execution/output/timers/timer/time[@label=\"device\"]"));
-		testResults.put(availableReportOptions.scriptTimerUx, getXPathValue(xml, "//execution/output/timers/timer/time[@label=\"ux\"]"));
-		
-		
+		testResults.put(availableReportOptions.scriptStartTime,
+				getXPathValue(xml, "//execution/info/times/flowTimes/start/millis"));
+		testResults.put(availableReportOptions.scriptEndTime,
+				getXPathValue(xml, "//execution/info/times/flowTimes/end/millis"));
+
+		testResults.put(availableReportOptions.scriptTimerElapsed,
+				getXPathValue(xml, "//execution/output/timers/timer/time[@label=\"elapsed\"]"));
+		testResults.put(availableReportOptions.scriptTimerSystem,
+				getXPathValue(xml, "//execution/output/timers/timer/time[@label=\"system\"]"));
+		testResults.put(availableReportOptions.scriptTimerDevice,
+				getXPathValue(xml, "//execution/output/timers/timer/time[@label=\"device\"]"));
+		testResults.put(availableReportOptions.scriptTimerUx,
+				getXPathValue(xml, "//execution/output/timers/timer/time[@label=\"ux\"]"));
+
 		testResults.put(availableReportOptions.scriptName, scriptName);
 		testResults.put(availableReportOptions.scriptStatus, scriptStatus);
-		testResults.put(availableReportOptions.deviceId,
-				getXPathValue(xml, "(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Id']/following-sibling::value"));
-		testResults.put(availableReportOptions.location,
-				getXPathValue(xml, "(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Location']/following-sibling::value"));
-		testResults.put(availableReportOptions.manufacturer,
-				getXPathValue(xml, "(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Manufacturer']/following-sibling::value"));
-		testResults.put(availableReportOptions.model,
-				getXPathValue(xml, "(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Model']/following-sibling::value"));
-		testResults.put(availableReportOptions.firmware,
-				getXPathValue(xml, "(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Firmware']/following-sibling::value"));
-		testResults.put(availableReportOptions.description,
-				getXPathValue(xml, "(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Description']/following-sibling::value"));
-		testResults.put(availableReportOptions.os,
-				getXPathValue(xml, "(execution/input/handsets/handset)[1]/properties/property/name[@displayName='OS']/following-sibling::value"));
-		testResults.put(availableReportOptions.osVersion,
-				getXPathValue(xml, "(execution/input/handsets/handset)[1]/properties/property/name[@displayName='OS Version']/following-sibling::value"));
+		testResults.put(availableReportOptions.deviceId, getXPathValue(xml,
+				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Id']/following-sibling::value"));
+		testResults.put(availableReportOptions.location, getXPathValue(xml,
+				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Location']/following-sibling::value"));
+		testResults.put(availableReportOptions.manufacturer, getXPathValue(xml,
+				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Manufacturer']/following-sibling::value"));
+		testResults.put(availableReportOptions.model, getXPathValue(xml,
+				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Model']/following-sibling::value"));
+		testResults.put(availableReportOptions.firmware, getXPathValue(xml,
+				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Firmware']/following-sibling::value"));
+		testResults.put(availableReportOptions.description, getXPathValue(xml,
+				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Description']/following-sibling::value"));
+		testResults.put(availableReportOptions.os, getXPathValue(xml,
+				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='OS']/following-sibling::value"));
+		testResults.put(availableReportOptions.osVersion, getXPathValue(xml,
+				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='OS Version']/following-sibling::value"));
 		testResults.put(availableReportOptions.xmlReport, xml);
-		
-		
-		String user=getXPathAttribute(xml, "owner", "(//execution/info/dataItems/dataItem)[1]/key");
-		
+
+		String user = getXPathAttribute(xml, "owner", "(//execution/info/dataItems/dataItem)[1]/key");
+
 		testResults.put(availableReportOptions.reportUrl,
 				"https://" + host + "/nexperience/Report.html?reportId=SYSTEM%3Adesigns%2Freport&key="
 						+ reportId.replace(".xml", "") + "%2Exml&liveUrl=rtmp%3A%2F%2F" + host.replace(".", "%2E")
@@ -201,16 +220,35 @@ public class PerfectoRunner {
 		Table<String, String, String> transactions = HashBasedTable.create();
 		String transName = "";
 		String transTimer = "";
-		String transSuccess="";
-		NodeList nodeL = getXPathList(xml, "//description[contains(text(),\"Validation\") and contains(text(),\"timer\")]/parent::status/parent::output/following-sibling::parameters/parameter/name[@displayName=\"Timer ID\"]/following-sibling::value");
-		NodeList nodeL2 = getXPathList(xml, "//description[contains(text(),\"Validation\") and contains(text(),\"timer\")]/preceding-sibling::success");
-		NodeList nodeL3 = getXPathList(xml, "//description[contains(text(),\"Validation\") and contains(text(),\"timer\")]/parent::status/parent::output/preceding-sibling::info/dataItems/dataItem[@label=\"actual\"]/value");
-		
+		String transSuccess = "";
+		NodeList nodeL = getXPathList(xml,
+				"//description[contains(text(),\"Validation\") and contains(text(),\"timer\")]/parent::status/parent::output/following-sibling::parameters/parameter/name[@displayName=\"Timer ID\"]/following-sibling::value");
+		NodeList nodeL2 = getXPathList(xml,
+				"//description[contains(text(),\"Validation\") and contains(text(),\"timer\")]/preceding-sibling::success");
+		NodeList nodeL3 = getXPathList(xml,
+				"//description[contains(text(),\"Validation\") and contains(text(),\"timer\")]/parent::status/parent::output/preceding-sibling::info/dataItems/dataItem[@label=\"actual\"]/value");
+
 		for (int i = 0; i < nodeL.getLength(); i++) {
-			
+
 			transName = nodeL.item(i).getTextContent();
 			transTimer = nodeL3.item(i).getTextContent();
-			transSuccess=nodeL2.item(i).getTextContent();
+			transSuccess = nodeL2.item(i).getTextContent();
+			transactions.put(transName, transTimer, transSuccess);
+
+		}
+
+		NodeList nodeL4 = getXPathList(xml, "//step/info/transaction/preceding-sibling::name");
+		NodeList nodeL5 = getXPathList(xml, "//step/info/transaction/preceding-sibling::times/flowTimes/start/millis");
+		NodeList nodeL6 = getXPathList(xml, "//step/info/transaction/preceding-sibling::times/flowTimes/end/millis");
+		NodeList nodeL7 = getXPathList(xml,
+				"//step/info/transaction/parent::info/following-sibling::output/status/success");
+
+		for (int i = 0; i < nodeL4.getLength(); i++) {
+
+			transName = nodeL4.item(i).getTextContent();
+			transTimer = Long.toString((Long.parseLong(nodeL6.item(i).getTextContent())
+					- Long.parseLong(nodeL5.item(i).getTextContent())));
+			transSuccess = nodeL7.item(i).getTextContent();
 			transactions.put(transName, transTimer, transSuccess);
 
 		}
@@ -234,37 +272,29 @@ public class PerfectoRunner {
 		return testResults;
 	}
 
-
 	public String getXPathValue(String xml, String XpathString)
 			throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
 
 		NodeList result = getXPathList(xml, XpathString);
-		
-			if(result.item(0)==null)
-			{
-				throw new XPathExpressionException("Xpath not found");
-			}
-			else
-			{
-				return result.item(0).getTextContent();
-			}							 
+
+		if (result.item(0) == null) {
+			throw new XPathExpressionException("Xpath not found");
+		} else {
+			return result.item(0).getTextContent();
+		}
 	}
-	
+
 	public String getXPathAttribute(String xml, String attribute, String XpathString)
 			throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
 
 		NodeList result = getXPathList(xml, XpathString);
-		
-			if(result.item(0)==null)
-			{
-				throw new XPathExpressionException("Xpath not found");
-			}
-			else
-			{
-				return result.item(0).getAttributes().getNamedItem(attribute).getTextContent();
-			}							 
+
+		if (result.item(0) == null) {
+			throw new XPathExpressionException("Xpath not found");
+		} else {
+			return result.item(0).getAttributes().getNamedItem(attribute).getTextContent();
+		}
 	}
-	
 
 	public NodeList getXPathList(String xml, String XpathString)
 			throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {

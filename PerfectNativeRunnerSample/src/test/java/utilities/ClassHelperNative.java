@@ -49,7 +49,7 @@ public abstract class ClassHelperNative {
 //	}
 	public void setSplunk() {
         SplunkReportingCollector reporting = ReportingCollectorFactory.createInstance(200000,
-                    "http", "localhost", "8088", "8AD6CD8E-6DB2-442B-87A3-567AD85D96E4");
+                    "http", "localhost", "8088", "805E9E81-171D-458B-8599-D50A34A45792");
         ReportingCollectorFactory.setReporting(reporting);
   }
 	// Returns the reporting class for use

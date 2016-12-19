@@ -1,32 +1,32 @@
 package tests;
 
 import java.lang.reflect.Method;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.Date;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.AfterTest;
+
+import PerfectoNativeRunner.PerfectoRunner;
 
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
 
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.AfterTest;
-import PerfectoNativeRunner.PerfectoRunner;
+import utilities.ClassHelperNative;
 
-public class TestSystem {
+public class TestSystem extends ClassHelperNative {
 
 	// the map to store the test results
-	private Map<PerfectoRunner.availableReportOptions, Object> testResults = new HashMap<PerfectoRunner.availableReportOptions, Object>();
 
 	// Executes the Native Tests
 	// define Perfecto and Script details
@@ -41,72 +41,16 @@ public class TestSystem {
 	// suggested value in the 1000s
 	// @8 Number of milliseconds to wait between each status check of the script
 	// ---- suggest 5000 milliseconds
-	public void bleh(String host, String username, String password, String scriptKey, String deviceId,
-			String additionalParams, int cycles, long waitForCycles) throws Exception {
-
-		PerfectoRunner pr = new PerfectoRunner();
-		String xml = pr.getXMLReport(host, username, password,
-				"PRIVATE:Prod/NativeRunner/160923/01_P1-K-SG5-FTW_P1-N-SG7-FTW_16-09-23_01_12_05_55379.xml");
-
-		testResults = pr.parseReport(xml, host);
-
-		long startTime = Long
-				.parseLong(testResults.get(PerfectoRunner.availableReportOptions.scriptStartTime).toString());
-
-		SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy hh:mm:ss a");
-		String dateTime = sdf.format(new Date(startTime));
-		String testCaseId = testResults.get(PerfectoRunner.availableReportOptions.scriptName).toString();
-		String MODevicePh = pr.getXPathValue(xml,
-				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName=\"Phone Number\"]/following-sibling::value");
-		String MTDevicePh = pr.getXPathValue(xml,
-				"(execution/input/handsets/handset)[2]/properties/property/name[@displayName=\"Phone Number\"]/following-sibling::value");
-		String testDuration = testResults.get(PerfectoRunner.availableReportOptions.scriptTimerElapsed).toString();
-
-		Table<String, String, String> transactions = (Table<String, String, String>) testResults
-				.get(PerfectoRunner.availableReportOptions.transactions);
-		String callSetupTime = "";
-		for (Cell<String, String, String> cell : transactions.cellSet()) {
-			System.out.println("transactionSuccess:" + cell.getValue());
-			System.out.println("transactionName:" + cell.getRowKey());
-			System.out.println("transactionTimer: " + cell.getColumnKey());
-			callSetupTime = cell.getColumnKey();
-		}
-
-		Map<String, String> variables = new HashMap<String, String>();
-
-		variables = (Map<String, String>) testResults.get(PerfectoRunner.availableReportOptions.variables);
-
-		String callDuration = variables.get("callTime");
-
-		String reportUrl = testResults.get(PerfectoRunner.availableReportOptions.reportUrl).toString();
-
-		try (FileWriter writer = new FileWriter("D:\\data\\sprintFile.csv", true)) {
-
-			writer.write(
-					"\"DateTime\",\"TestCaseID\",\"MODevicePh\",\"MTDevicePh\",\"CallConnected\",\"CallDisconnected\",\"LastedDurationoftest\",\"CallDuration\",\"CallSetuptime\",\"LogsLinks\"\r\n");
-
-			int counter = 0;
-
-			String out = "\"" + dateTime + "\",\"" + testCaseId + "\",\"" + MODevicePh + "\",\"" + MTDevicePh
-					+ "\",\"pass\",\"pass\",\"" + testDuration + "\",\"" + callDuration + "\",\"" + callSetupTime
-					+ "\",\"" + reportUrl + "\r\n";
-
-			writer.write(out);
-
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	@Parameters({ "host", "username", "password", "scriptKey", "deviceId", "additionalParams", "cycles",
-			"waitForCycles" })
+	@Parameters({ "host", "username", "password", "scriptKey", "deviceId",
+			"additionalParams", "cycles", "waitForCycles" })
 	@Test
-	public void NativeTests(String host, String username, String password, String scriptKey, String deviceId,
-			String additionalParams, int cycles, long waitForCycles) throws Exception {
-		// executes the script and gathers the test results
+	public void NativeTests(String host, String username, String password,
+			String scriptKey, String deviceId, String additionalParams,
+			int cycles, long waitForCycles) throws Exception {
 		PerfectoRunner pr = new PerfectoRunner();
+
+		// executes the script and gathers the test results
+
 		// Executes the Native Tests
 		// define Perfecto and Script details
 		// Params
@@ -124,87 +68,72 @@ public class TestSystem {
 		// @8 Number of milliseconds to wait between each status check of the
 		// script
 		// ---- suggest 5000 milliseconds
-		testResults = pr.executeScript(host, username, password, scriptKey, deviceId, additionalParams, cycles,
-				waitForCycles);
+		testResults = pr.executeScript(host, username, password, scriptKey,
+				deviceId, additionalParams, cycles, waitForCycles);
 
-		// to grab the test results use the following syntax
-		// PerfectoRunner.availableReportOptions.<selected report
-		// options>.toString()
+		System.out.println("ScriptStatus:"
+				+ testResults.get(
+						PerfectoRunner.availableReportOptions.scriptStatus)
+						.toString());
 
-		long startTime = Long
-				.parseLong(testResults.get(PerfectoRunner.availableReportOptions.scriptStartTime).toString());
+		System.out.println("Model:"
+				+ testResults.get(PerfectoRunner.availableReportOptions.model)
+						.toString());
 
-		SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy hh:mm:ss a");
-		String dateTime = sdf.format(new Date(startTime));
-		String testCaseId = testResults.get(PerfectoRunner.availableReportOptions.scriptName).toString();
-		String MODevicePh = pr.getXPathValue(
-				testResults.get(PerfectoRunner.availableReportOptions.xmlReport).toString(),
-				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName=\"Phone Number\"]/following-sibling::value");
-		
-		String testDuration = testResults.get(PerfectoRunner.availableReportOptions.scriptTimerElapsed).toString();
+		System.out.println("Os:"
+				+ testResults.get(PerfectoRunner.availableReportOptions.os)
+						.toString());
+
+		System.out.println("OSVersion:"
+				+ testResults.get(
+						PerfectoRunner.availableReportOptions.osVersion)
+						.toString());
+
+		System.out.println("DeviceId:"
+				+ testResults.get(
+						PerfectoRunner.availableReportOptions.deviceId)
+						.toString());
+
+		System.out.println("scriptName:"
+				+ testResults.get(
+						PerfectoRunner.availableReportOptions.scriptName)
+						.toString());
+
+		System.out.println("reportId:"
+				+ testResults.get(
+						PerfectoRunner.availableReportOptions.reportId)
+						.toString());
+
+		System.out.println("executionId:"
+				+ testResults.get(
+						PerfectoRunner.availableReportOptions.executionId)
+						.toString());
+
+		if (testResults.get(PerfectoRunner.availableReportOptions.scriptStatus)
+				.toString().equals("Fail")) {
+			System.out.println("Exception: "
+					+ testResults.get(
+							PerfectoRunner.availableReportOptions.exception)
+							.toString());
+		}
+
+		Map<String, String> variables = (Map<String, String>) testResults
+				.get(PerfectoRunner.availableReportOptions.variables);
+
+		int i = 1;
+		for (String key : variables.keySet()) {
+			System.out.println("variableName:" + key.toString());
+			System.out.println("variableValue:"
+					+ variables.get(key).toString().trim());
+		}
 
 		Table<String, String, String> transactions = (Table<String, String, String>) testResults
 				.get(PerfectoRunner.availableReportOptions.transactions);
-		String callSetupTime = "";
-		String callConnected = "";
-		String callDuration = "";
-		String callDisconnected = "";
 		for (Cell<String, String, String> cell : transactions.cellSet()) {
 			System.out.println("transactionSuccess:" + cell.getValue());
 			System.out.println("transactionName:" + cell.getRowKey());
 			System.out.println("transactionTimer: " + cell.getColumnKey());
-
-			if (cell.getRowKey().equalsIgnoreCase("Call received MOMT")) {
-				if (cell.getValue().equalsIgnoreCase("true")) {
-					callConnected = "Yes";
-					callSetupTime = cell.getColumnKey();
-				} else {
-					callConnected = "No";
-					callSetupTime = cell.getColumnKey();
-				}
-			}
-
-			if (cell.getRowKey().equalsIgnoreCase("Call duration MOMT")) {
-				if (cell.getValue().equalsIgnoreCase("true")) {
-					callDisconnected = "Yes";
-					callDuration = cell.getColumnKey();
-				} else {
-					callDisconnected = "No";
-					callDuration = cell.getColumnKey();
-				}
-			}
-
 		}
 
-		Map<String, String> variables = new HashMap<String, String>();
-
-		/*
-		 * variables = (Map<String, String>)
-		 * testResults.get(PerfectoRunner.availableReportOptions.variables);
-		 * 
-		 * String callDuration = variables.get("callTime");
-		 */
-
-		String reportUrl = testResults.get(PerfectoRunner.availableReportOptions.reportUrl).toString();
-		
-		System.out.println(testResults.get(PerfectoRunner.availableReportOptions.exception).toString());
-
-		/*try (FileWriter writer = new FileWriter("D:\\data\\sprintFile.csv", false)) {
-
-			writer.write(
-					"\"DateTime\",\"TestCaseID\",\"MODevicePh\",\"MTDevicePh\",\"CallConnected\",\"CallDisconnected\",\"LastedDurationoftest\",\"CallDuration\",\"CallSetuptime\",\"LogsLinks\"\r\n");
-
-			int counter = 0;
-
-			String out = "\"" + dateTime + "\",\"" + testCaseId + "\",\"" + MODevicePh + "\",\"" + MTDevicePh + "\",\""
-					+ callConnected + "\",\"" + callDisconnected + "\",\"" + testDuration + "\",\"" + callDuration
-					+ "\",\"" + callSetupTime + "\",\"" + reportUrl + "\r\n";
-
-			writer.write(out);
-
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
 	}
 }

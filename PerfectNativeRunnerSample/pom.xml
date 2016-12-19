@@ -8,7 +8,7 @@
 		<testngFile>testsuiteNative.xml</testngFile>
 		<CLOUDHOST>${env.CLOUDHOST}</CLOUDHOST>
 		<USERNAME>${env.USERNAME}</USERNAME>
-		<PASSWORD>${env.CLOUDHOST}</PASSWORD>
+		<PASSWORD>${env.PASSWORD}</PASSWORD>
 		<SCRIPT>${env.SCRIPT}</SCRIPT>
 		<DEVICE>${env.DEVICE}</DEVICE>
 		<PARAMS>${env.PARAMS}</PARAMS>

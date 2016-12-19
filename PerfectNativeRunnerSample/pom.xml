@@ -15,6 +15,13 @@
 		</repository>
 	</repositories>
 	<dependencies>
+	<dependency>
+			<groupId>NativeRunner</groupId>
+			<artifactId>com.perfecto</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/test/resources/PerfectoNativeRunner.jar</systemPath>
+		</dependency>		
 		<dependency>
 			<groupId>org.uncommons</groupId>
 			<artifactId>reportng</artifactId>

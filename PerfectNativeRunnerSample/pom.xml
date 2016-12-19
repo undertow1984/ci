@@ -125,7 +125,7 @@
 						<waitForCycles>${WAIT}</waitForCycles>
 					</systemPropertyVariables>
 					<suiteXmlFiles>
-						<suiteXmlFile>${basedir}/${testngFile}</suiteXmlFile>
+						<suiteXmlFile>${basedir}/test/resources/${testngFile}</suiteXmlFile>
 					</suiteXmlFiles>
 					<workingDirectory>target/</workingDirectory>
 				</configuration>

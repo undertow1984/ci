@@ -5,7 +5,15 @@
 	<artifactId>NativeRunnerTest</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
-			<testngFile>testsuiteNative.xml</testngFile>
+		<testngFile>testsuiteNative.xml</testngFile>
+		<CLOUDHOST>${env.CLOUDHOST}</CLOUDHOST>
+		<USERNAME>${env.USERNAME}</USERNAME>
+		<PASSWORD>${env.CLOUDHOST}</PASSWORD>
+		<SCRIPT>${env.SCRIPT}</SCRIPT>
+		<DEVICE>${env.DEVICE}</DEVICE>
+		<PARAMS>${env.PARAMS}</PARAMS>
+		<CYCLES>${env.CYCLES}</CYCLES>
+		<WAIT>${env.WAIT}</WAIT>
 	</properties>
 	<repositories>
 		<repository>
@@ -15,20 +23,20 @@
 		</repository>
 	</repositories>
 	<dependencies>
-	<dependency>
+		<dependency>
 			<groupId>NativeRunner</groupId>
 			<artifactId>com.perfecto</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/test/resources/PerfectoNativeRunner.jar</systemPath>
-		</dependency>	
+		</dependency>
 		<dependency>
 			<groupId>Splunk</groupId>
 			<artifactId>com.perfecto</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/test/resources/PerfectoSplunk.jar</systemPath>
-		</dependency>			
+		</dependency>
 		<dependency>
 			<groupId>org.uncommons</groupId>
 			<artifactId>reportng</artifactId>
@@ -50,53 +58,53 @@
 			<artifactId>guice</artifactId>
 			<version>3.0</version>
 		</dependency>
-<dependency>
-    <groupId>org.json</groupId>
-    <artifactId>json</artifactId>
-    <version>20160212</version>
-</dependency>
-<dependency>
-    <groupId>net.sf.opencsv</groupId>
-    <artifactId>opencsv</artifactId>
-    <version>2.3</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-annotations</artifactId>
-    <version>2.8.2</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-databind</artifactId>
-    <version>2.8.2</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-<dependency>
-    <groupId>com.google.guava</groupId>
-    <artifactId>guava</artifactId>
-    <version>19.0</version>
-</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160212</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>2.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.8.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.8.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>19.0</version>
+		</dependency>
 
-<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-core</artifactId>
-    <version>2.8.2</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-csv -->
-<dependency>
-    <groupId>com.fasterxml.jackson.dataformat</groupId>
-    <artifactId>jackson-dataformat-csv</artifactId>
-    <version>2.8.2</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
-<dependency>
-    <groupId>com.google.code.gson</groupId>
-    <artifactId>gson</artifactId>
-    <version>2.8.0</version>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.8.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-csv -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-csv</artifactId>
+			<version>2.8.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.0</version>
+		</dependency>
 
 	</dependencies>
 	<build>
@@ -106,19 +114,19 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.18.1</version>
 				<configuration>
-				<systemPropertyVariables>
-						<host>${env.CLOUD_HOST}</host>
-						<username>${env.USERNAME}</username>
-						<password>${env.PASSWORD}</password>
-						<scriptKey>${env.SCRIPT}</scriptKey>
-						<deviceId>${env.DEVICE}</deviceId>
-						<additionalParams>${env.PARAMS}</additionalParams>						
-						<cycles>${env.CYCLES}</cycles>						
-						<waitForCycles>${env.WAIT}</waitForCycles>
+					<systemPropertyVariables>
+						<host>${CLOUDHOST}</host>
+						<username>${USERNAME}</username>
+						<password>${PASSWORD}</password>
+						<scriptKey>${SCRIPT}</scriptKey>
+						<deviceId>${DEVICE}</deviceId>
+						<additionalParams>${PARAMS}</additionalParams>
+						<cycles>${CYCLES}</cycles>
+						<waitForCycles>${WAIT}</waitForCycles>
 					</systemPropertyVariables>
 					<suiteXmlFiles>
 						<suiteXmlFile>${basedir}/${testngFile}</suiteXmlFile>
-					</suiteXmlFiles>					
+					</suiteXmlFiles>
 					<workingDirectory>target/</workingDirectory>
 				</configuration>
 			</plugin>

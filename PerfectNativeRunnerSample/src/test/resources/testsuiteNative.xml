@@ -8,15 +8,15 @@
 	</listeners>
 
 	<test name="NativeTestiOS">
-		<parameter name="host" value="yourHostname" />
+		<!-- <parameter name="host" value="yourHostname" />
 		<parameter name="username" value="yourUsername" />
 		<parameter name="password" value="yourPassword" />
 		<parameter name="scriptKey" value="yourRepositoryKey" />
 		<parameter name="deviceId" value="yourDeviceId" />
-		<!-- in testng the additional parameters need to have their & encoded like this value="&amp;param.url=m.newegg.com" /> -->
+		in testng the additional parameters need to have their & encoded like this value="&amp;param.url=m.newegg.com" />
 		<parameter name="additionalParams" value="" />
 		<parameter name="cycles" value="1000" />
-		<parameter name="waitForCycles" value="5000" />
+		<parameter name="waitForCycles" value="5000" /> -->
 		<classes>
 			<class name="tests.TestSystem">
 			</class>

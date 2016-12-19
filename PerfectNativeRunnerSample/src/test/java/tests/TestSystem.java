@@ -98,6 +98,10 @@ public class TestSystem extends ClassHelperNative {
 				+ testResults.get(
 						PerfectoRunner.availableReportOptions.scriptName)
 						.toString());
+		
+		getCollector().reporting.put("TestName", testResults.get(
+				PerfectoRunner.availableReportOptions.scriptName)
+				.toString());
 
 		System.out.println("reportId:"
 				+ testResults.get(

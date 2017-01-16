@@ -36,6 +36,23 @@ import com.google.common.collect.Table.Cell;
 public class PerfectoRunner {
 	private Proxy proxy = null;
 
+	private String hostLocal;
+	private String usernameLocal;
+	private String passwordLocal;
+	private String vitalsFileLocal;
+	private String reportKeyLocal;
+	private String pcapFileLocal;
+	private String recordingFLVLocal;
+	private String recordingMP4Local;
+	private String fileOutputVideoLocal;
+	private String fileOutputVitalsLocal;
+	private String fileOutputPcapLocal;
+	private String fileOutputXmlLocal;
+	private String fileOutputPdfLocal;
+	private String xmlFileLocal;
+	private String pdfFileLocal;
+	
+
 	// proxy constructor
 	public PerfectoRunner(Proxy proxy) {
 		this.proxy = proxy;
@@ -46,7 +63,7 @@ public class PerfectoRunner {
 	}
 
 	public enum availableReportOptions {
-		scriptTimerElapsed, scriptTimerDevice, scriptTimerSystem, scriptTimerUx, scriptStartTime, scriptEndTime, executionId, reportId, scriptName, scriptStatus, deviceId, location, manufacturer, model, firmware, description, os, osVersion, transactions, reportUrl, xmlReport, variables, exception
+		scriptTimerElapsed, scriptTimerDevice, scriptTimerSystem, scriptTimerUx, scriptStartTime, scriptEndTime, executionId, reportId, scriptName, scriptStatus, deviceId, location, manufacturer, model, firmware, description, os, osVersion, transactions, reportUrl, xmlReport, variables, exception, recordingStreamFlvUrl, recordingDownloadFlvUrl, recordingStreamMp4Url, recordingDownloadMp4Url, vitalsUrl, pcapUrl, recordingFlvFileName, recordingMp4FileName, vitalsFileName, pcapFileName, pdfFileName, pdfUrl,xmlFileName, xmlUrl
 	}
 
 	public String getXMLReport(String host, String username, String password, String reportKey)
@@ -62,17 +79,28 @@ public class PerfectoRunner {
 				+ "?operation=download&user=" + username + "&password=" + password + "&responseformat=xml");
 		return response;
 	}
+	
+	
 
 	// executes the script and generates the response data
 	public Map<availableReportOptions, Object> executeScript(String host, String username, String password,
-			String scriptKey, String deviceId, String additionalParams, int cycles, long waitBetweenCycles)
-			throws DOMException, Exception {
+			String scriptKey, String deviceId, String additionalParams, int cycles, long waitBetweenCycles,
+			String fileOutputVideo, String fileOutputVitals, String fileOutputPcap, String fileOutputXml, String fileOutputPdf) throws DOMException, Exception {
 		HttpClient hc;
 		if (proxy != null) {
 			hc = new HttpClient(proxy);
 		} else {
 			hc = new HttpClient();
 		}
+
+		hostLocal = host;
+		usernameLocal = username;
+		passwordLocal = password;
+		fileOutputVideoLocal = fileOutputVideo;
+		fileOutputVitalsLocal = fileOutputVitals;
+		fileOutputPcapLocal = fileOutputPcap;
+		fileOutputXmlLocal= fileOutputXml;
+		fileOutputPdfLocal = fileOutputPdf;
 
 		String executionId = "";
 		String reportId = "";
@@ -93,6 +121,7 @@ public class PerfectoRunner {
 						Thread.sleep(waitBetweenCycles);
 					} else {
 						reportId = hc.getJsonValue(response, "reportKey");
+						reportKeyLocal=reportId;
 						break;
 					}
 				}
@@ -148,15 +177,13 @@ public class PerfectoRunner {
 
 				testResults.put(availableReportOptions.exception, exception);
 			} catch (Exception ex) {
-				
-				
+
 				NodeList nodeL8 = getXPathList(xml,
-						"//output/status/code[text()=\"Failed\"]/following-sibling::description[text()!=\"Failed\"]");
+						"//output/status/code[text()=\"Failed\"]/following-sibling::description[text()!=\"Failed\"]|//output/status/code[text()=\"ResourcesUnavailable\"]/following-sibling::description[text()!=\"Failed\"]");
 				String exception = nodeL8.item(0).getTextContent();
 
 				testResults.put(availableReportOptions.exception, exception);
 			}
-
 
 			if (!statusSub.getElementsByTagName("code").item(0).getTextContent().equals("CompletedWithErrors"))
 
@@ -189,23 +216,82 @@ public class PerfectoRunner {
 				getXPathValue(xml, "//execution/output/timers/timer/time[@label=\"ux\"]"));
 
 		testResults.put(availableReportOptions.scriptName, scriptName);
-		testResults.put(availableReportOptions.scriptStatus, scriptStatus);
-		testResults.put(availableReportOptions.deviceId, getXPathValue(xml,
-				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Id']/following-sibling::value"));
-		testResults.put(availableReportOptions.location, getXPathValue(xml,
-				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Location']/following-sibling::value"));
-		testResults.put(availableReportOptions.manufacturer, getXPathValue(xml,
-				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Manufacturer']/following-sibling::value"));
-		testResults.put(availableReportOptions.model, getXPathValue(xml,
-				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Model']/following-sibling::value"));
-		testResults.put(availableReportOptions.firmware, getXPathValue(xml,
-				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Firmware']/following-sibling::value"));
-		testResults.put(availableReportOptions.description, getXPathValue(xml,
-				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Description']/following-sibling::value"));
-		testResults.put(availableReportOptions.os, getXPathValue(xml,
-				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='OS']/following-sibling::value"));
-		testResults.put(availableReportOptions.osVersion, getXPathValue(xml,
-				"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='OS Version']/following-sibling::value"));
+
+		try {
+			testResults.put(availableReportOptions.recordingDownloadMp4Url,
+					getXPathValue(xml, "//dataItem[@label=\"recordingDownload\" and @format=\"mp4\"]/file"));
+			recordingMP4Local = getXPathValue(xml, "//dataItem[@label=\"recordingDownload\" and @format=\"mp4\"]/file");
+			testResults.put(availableReportOptions.recordingMp4FileName, recordingMP4Local.split("/")[5]);
+		} catch (Exception ex) {
+
+		}
+
+		try {
+			testResults.put(availableReportOptions.recordingDownloadFlvUrl,
+					getXPathValue(xml, "//dataItem[@label=\"recordingDownload\" and @format=\"flv\"]/file"));
+			recordingFLVLocal = getXPathValue(xml, "//dataItem[@label=\"recordingDownload\" and @format=\"flv\"]/file");
+			testResults.put(availableReportOptions.recordingFlvFileName, recordingFLVLocal.split("/")[5]);
+		} catch (Exception ex) {
+		}
+
+		try {
+
+			pcapFileLocal = getXPathValue(xml, "//dataItem[@type=\"network\" and @format=\"pcap\"]/attachment");
+			testResults.put(availableReportOptions.pcapFileName, pcapFileLocal.replace("network/", ""));
+			testResults.put(availableReportOptions.pcapUrl,
+					"https://" + hostLocal + "/services/reports/" + reportKeyLocal + "?operation=network&user="
+							+ usernameLocal + "&password=" + passwordLocal + "&attachment=" + pcapFileLocal + "");
+
+		} catch (Exception ex) {
+		}
+
+		try {
+
+			vitalsFileLocal = getXPathValue(xml, "//dataItem[@type=\"monitor\" and @format=\"csv\"]/attachment");
+			testResults.put(availableReportOptions.vitalsFileName, vitalsFileLocal.replace("vitals/", ""));
+			testResults.put(availableReportOptions.vitalsUrl,
+					"https://" + hostLocal + "/services/reports/" + reportKeyLocal + "?operation=monitor&user="
+							+ usernameLocal + "&password=" + passwordLocal + "&attachment=" + vitalsFileLocal + "");
+
+		} catch (Exception ex) {
+		}
+		
+		try {
+			xmlFileLocal = reportKeyLocal.split("/")[1].replace(".xml", "");
+			pdfFileLocal = reportKeyLocal.split("/")[1].replace(".xml", "");
+			testResults.put(availableReportOptions.xmlFileName, xmlFileLocal);
+			testResults.put(availableReportOptions.xmlUrl, "https://" + hostLocal + "/services/reports/" + reportKeyLocal.replace(" ", "%20")
+			+ "?operation=download&user=" + usernameLocal + "&password=" + passwordLocal + "&responseformat=xml");
+			
+			testResults.put(availableReportOptions.pdfFileName, xmlFileLocal);
+			testResults.put(availableReportOptions.pdfUrl, "https://" + hostLocal + "/services/reports/" + reportKeyLocal.replace(" ", "%20")
+			+ "?operation=download&user=" + usernameLocal + "&password=" + passwordLocal + "&format=pdf");
+		} catch (Exception ex) {
+			
+		}
+
+		try {
+			testResults.put(availableReportOptions.deviceId, getXPathValue(xml,
+					"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Id']/following-sibling::value"));
+			testResults.put(availableReportOptions.location, getXPathValue(xml,
+					"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Location']/following-sibling::value"));
+			testResults.put(availableReportOptions.manufacturer, getXPathValue(xml,
+					"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Manufacturer']/following-sibling::value"));
+			testResults.put(availableReportOptions.model, getXPathValue(xml,
+					"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Model']/following-sibling::value"));
+			testResults.put(availableReportOptions.firmware, getXPathValue(xml,
+					"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Firmware']/following-sibling::value"));
+			testResults.put(availableReportOptions.description, getXPathValue(xml,
+					"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='Description']/following-sibling::value"));
+			testResults.put(availableReportOptions.os, getXPathValue(xml,
+					"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='OS']/following-sibling::value"));
+			testResults.put(availableReportOptions.osVersion, getXPathValue(xml,
+					"(execution/input/handsets/handset)[1]/properties/property/name[@displayName='OS Version']/following-sibling::value"));
+
+		} catch (Exception ex) {
+
+		}
+
 		testResults.put(availableReportOptions.xmlReport, xml);
 
 		String user = getXPathAttribute(xml, "owner", "(//execution/info/dataItems/dataItem)[1]/key");
@@ -331,4 +417,53 @@ public class PerfectoRunner {
 		return mapper.writeValueAsString(data);
 	}
 
+	public void downloadMP4Video() throws Exception {
+
+		HttpClient hc = new HttpClient();
+		File file = new File( fileOutputVideoLocal, recordingMP4Local.split("/")[5]);
+		hc.download(recordingMP4Local,file);
+	}
+
+	public void downloadFLVVideo() throws Exception {
+		HttpClient hc = new HttpClient();
+		File file = new File(fileOutputVideoLocal, recordingFLVLocal.split("/")[5]);
+		hc.download(recordingFLVLocal, file);
+	}
+
+	public void downloadVitals() throws Exception {
+		HttpClient hc = new HttpClient();
+		File file = new File(fileOutputVitalsLocal, vitalsFileLocal.replace("vitals/", ""));
+		hc.download(
+				"https://" + hostLocal + "/services/reports/" + reportKeyLocal + "?operation=monitor&user="
+						+ usernameLocal + "&password=" + passwordLocal + "&attachment=" + vitalsFileLocal + "", file
+				);
+	}
+
+	public void downloadPCAP() throws Exception {
+		HttpClient hc = new HttpClient();
+		File file = new File(fileOutputPcapLocal, pcapFileLocal.replace("network/", ""));
+		hc.download(
+				"https://" + hostLocal + "/services/reports/" + reportKeyLocal + "?operation=network&user="
+						+ usernameLocal + "&password=" + passwordLocal + "&attachment=" + pcapFileLocal + "",
+				file);
+	}
+	
+	public void downloadXMLReport() throws Exception {
+		HttpClient hc = new HttpClient();
+		File file = new File(fileOutputXmlLocal, xmlFileLocal+".xml");
+		
+		hc.download("https://" + hostLocal + "/services/reports/" + reportKeyLocal.replace(" ", "%20")
+				+ "?operation=download&user=" + usernameLocal + "&password=" + passwordLocal + "&responseformat=xml", file);
+	}
+	
+	public void downloadPDFReport() throws Exception {
+		HttpClient hc = new HttpClient();
+		File file = new File(fileOutputPdfLocal, pdfFileLocal+".pdf");
+		
+		hc.download("https://" + hostLocal + "/services/reports/" + reportKeyLocal.replace(" ", "%20")
+				+ "?operation=download&user=" + usernameLocal + "&password=" + passwordLocal + "&format=pdf", file);
+	}
+	
+	
+	
 }

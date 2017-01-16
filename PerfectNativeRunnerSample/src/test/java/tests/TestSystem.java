@@ -25,9 +25,9 @@ import com.google.common.collect.Table.Cell;
 import utilities.ClassHelperNative;
 
 public class TestSystem extends ClassHelperNative {
+	
 
 	// the map to store the test results
-
 	// Executes the Native Tests
 	// define Perfecto and Script details
 	// Params
@@ -69,7 +69,7 @@ public class TestSystem extends ClassHelperNative {
 		// script
 		// ---- suggest 5000 milliseconds
 		testResults = pr.executeScript(host, username, password, scriptKey,
-				deviceId, additionalParams, cycles, waitForCycles);
+				deviceId, additionalParams, cycles, waitForCycles, "d:\\testResults", "d:\\testResults", "d:\\testResults", "d:\\testResults", "d:\\testResults");
 
 		System.out.println("ScriptStatus:"
 				+ testResults.get(
@@ -112,6 +112,17 @@ public class TestSystem extends ClassHelperNative {
 				+ testResults.get(
 						PerfectoRunner.availableReportOptions.executionId)
 						.toString());
+		
+		System.out.println("xmlFileName:"
+				+ testResults.get(
+						PerfectoRunner.availableReportOptions.xmlFileName)
+						.toString());
+
+		System.out.println("xmlUrl:"
+				+ testResults.get(
+						PerfectoRunner.availableReportOptions.xmlUrl)
+						.toString());
+
 
 		if (testResults.get(PerfectoRunner.availableReportOptions.scriptStatus)
 				.toString().equals("Fail")) {
@@ -138,6 +149,64 @@ public class TestSystem extends ClassHelperNative {
 			System.out.println("transactionName:" + cell.getRowKey());
 			System.out.println("transactionTimer: " + cell.getColumnKey());
 		}
+		
+
+
+
+	            System.out.println("MP4VideoUrl:"
+	          + testResults.get(
+	                  PerfectoRunner.availableReportOptions.recordingDownloadMp4Url)
+	                  .toString());
+
+	            System.out.println("FLVVideoUrl:"
+	       + testResults.get(
+	               PerfectoRunner.availableReportOptions.recordingDownloadFlvUrl)
+	               .toString());
+
+	            System.out.println("MP4VideoFileName:"
+	       + testResults.get(
+	               PerfectoRunner.availableReportOptions.recordingMp4FileName)
+	               .toString());
+
+	            System.out.println("FlvVideoFileName:"
+	       + testResults.get(
+	               PerfectoRunner.availableReportOptions.recordingFlvFileName)
+	               .toString());
+
+	            System.out.println("pcapFileName:"
+	       + testResults.get(
+	               PerfectoRunner.availableReportOptions.pcapFileName)
+	               .toString());
+
+	            System.out.println("pcalUrl:"
+	       + testResults.get(
+	               PerfectoRunner.availableReportOptions.pcapUrl)
+	               .toString());
+
+	            System.out.println("vitalsFileName:"
+	 + testResults.get(
+	         PerfectoRunner.availableReportOptions.vitalsFileName)
+	         .toString());
+
+	            System.out.println("vitalsUrl:"
+	       + testResults.get(
+	               PerfectoRunner.availableReportOptions.vitalsUrl)
+	               .toString());
+
+
+	            pr.downloadFLVVideo();
+
+	            pr.downloadMP4Video();
+
+	            pr.downloadPCAP();
+
+	            pr.downloadVitals();
+	            
+	            pr.downloadXMLReport();
+	            
+	            pr.downloadPDFReport();
+		
+		
 
 	}
 }

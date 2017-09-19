@@ -56,7 +56,7 @@ public class Parser {
 			}
 			String xml = xmlHeader + "<test>" + System.lineSeparator() + XML.toString(json) + "</test>";
 			HashMap<String, HashMap<String, ArrayList<HashMap<String, String>>>> files = new HashMap<String, HashMap<String, ArrayList<HashMap<String, String>>>>();
-			String[] classes = className.split("\\|");
+			String[] classes = className.split("\\;;");
 			for (String testClass : classes) {
 				NodeList nodes = getXPathList(xml, resource);
 

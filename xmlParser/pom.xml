@@ -4,9 +4,6 @@
 	<groupId>xmlParser</groupId>
 	<artifactId>xmlParser</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<properties>
-    <jenkins.e2eTests.reportsDirectory>/</jenkins.e2eTests.reportsDirectory>
-</properties>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>

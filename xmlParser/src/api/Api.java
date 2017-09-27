@@ -17,16 +17,18 @@ import org.json.JSONObject;
 public class Api {
 	public static String SECURITY_TOKEN = "MY_CONTINUOUS_QUALITY_LAB_SECURITY_TOKEN";
 	public static String CQL_NAME = "demo";
+	public static String jobName="";
+	public static String jobNumber="";
 	
-	public static JSONObject retrieveTestExecutions() throws URISyntaxException, IOException {
-		return retrieveTestExecutions(Long.toString(System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(5)), Long.toString(System.currentTimeMillis()));
+	public static JSONObject retrieveTestExecutions(String tagParam) throws URISyntaxException, IOException {
+		return retrieveTestExecutions(Long.toString(System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1440)), Long.toString(System.currentTimeMillis()),tagParam);
 	}
-    public static JSONObject retrieveTestExecutions(String start, String end) throws URISyntaxException, IOException {
-        URIBuilder uriBuilder = new URIBuilder(getServerURL() + "/export/api/v1/test-executions");
+    private static JSONObject retrieveTestExecutions(String start, String end, String tagParam) throws URISyntaxException, IOException {
+        URIBuilder uriBuilder = new URIBuilder(getServerURL() + "?jobNumber[0]="+jobNumber+"&jobName="+jobName+tagParam);
 
         // Optional: Filter by range. In this example: retrieve test executions of the past month (result may contain tests of multiple driver executions)
-        uriBuilder.addParameter("startExecutionTime[0]", start);
-        uriBuilder.addParameter("endExecutionTime[0]", end);
+        //uriBuilder.addParameter("startExecutionTime[0]", start);
+       // uriBuilder.addParameter("endExecutionTime[0]", end);
 
         // Optional: Filter by a specific driver execution ID that you can obtain at script execution
         // uriBuilder.addParameter("externalId[0]", "SOME_DRIVER_EXECUTION_ID");
@@ -57,6 +59,6 @@ public class Api {
         request.addHeader("PERFECTO_AUTHORIZATION", SECURITY_TOKEN);
     }
     public static String getServerURL() {
-    	return  "https://" + CQL_NAME + ".reporting.perfectomobile.com";
+    	return  "https://" + CQL_NAME + ".reporting.perfectomobile.com/export/api/v1/test-executions/";
     }
 }

@@ -41,48 +41,48 @@ public class Parser {
 	public static void main(String[] args) {
 		api.Api.CQL_NAME = args[0];
 		api.Api.SECURITY_TOKEN = args[1];
-		String className = "";
-		HashMap<String, String> deviceMap = new HashMap<String, String>();
-		if (args.length > 4) {
-			className = args[4];
-		}
+		api.Api.jobName = args[3];
+		api.Api.jobNumber = args[4];
+		String tags = args[2];
 		JSONObject json = null;
+		String tagParam="";
+		HashMap<String, String> deviceMap = new HashMap<String, String>();
 
 		try {
-			if (args.length > 2) {
-				json = api.Api.retrieveTestExecutions(args[2], args[3]);
-			} else {
-				json = api.Api.retrieveTestExecutions();
+			String[] tagList = tags.split("\\;;");
+			int z=0;
+			for (String tagItem : tagList) {
+				tagParam=tagParam+"&tags["+z+"]="+tagItem;
+				z++;
 			}
+
+			json = api.Api.retrieveTestExecutions(tagParam);
 			String xml = xmlHeader + "<test>" + System.lineSeparator() + XML.toString(json) + "</test>";
 			HashMap<String, HashMap<String, ArrayList<HashMap<String, String>>>> files = new HashMap<String, HashMap<String, ArrayList<HashMap<String, String>>>>();
-			String[] classes = className.split("\\;;");
-			for (String testClass : classes) {
-				NodeList nodes = getXPathList(xml, resource);
 
-				for (int i = 1; i <= nodes.getLength(); i++) {
-					String name = getXPathValue(xml, resource + "[" + i + "]" + namePath);
-					if (name.contains(testClass)) {
-						String runid = getXPathValue(xml, resource + "[" + i + "]" + externalId);
-						if (!files.containsKey(runid)) {
-							files.put(runid, new HashMap<String, ArrayList<HashMap<String, String>>>());
-						}
-						String device = getXPathValue(xml, resource + "[" + i + "]" + devicePath);
-						if (!files.get(runid).containsKey(device)) {
-							files.get(runid).put(device, new ArrayList<HashMap<String, String>>());
-						}
-						if (!deviceMap.containsKey(device)) {
-							deviceMap.put(device, getXPathValue(xml, resource + "[" + i + "]" + modelPath));
-						}
-						HashMap<String, String> values = new HashMap<String, String>();
-						values.put("name", name);
-						values.put("duration", getXPathValue(xml, resource + "[" + i + "]" + uxDuration));
-						values.put("status", getXPathValue(xml, resource + "[" + i + "]" + statusPath));
-						values.put("startTime", getXPathValue(xml, resource + "[" + i + "]" + startTimePath));
-						files.get(runid).get(device).add(values);
-					}
+			NodeList nodes = getXPathList(xml, resource);
+			for (int i = 1; i <= nodes.getLength(); i++) {
+				String name = getXPathValue(xml, resource + "[" + i + "]" + namePath);
+
+				String runid = getXPathValue(xml, resource + "[" + i + "]" + externalId);
+				if (!files.containsKey(runid)) {
+					files.put(runid, new HashMap<String, ArrayList<HashMap<String, String>>>());
 				}
+				String device = getXPathValue(xml, resource + "[" + i + "]" + devicePath);
+				if (!files.get(runid).containsKey(device)) {
+					files.get(runid).put(device, new ArrayList<HashMap<String, String>>());
+				}
+				if (!deviceMap.containsKey(device)) {
+					deviceMap.put(device, getXPathValue(xml, resource + "[" + i + "]" + modelPath));
+				}
+				HashMap<String, String> values = new HashMap<String, String>();
+				values.put("name", name);
+				values.put("duration", getXPathValue(xml, resource + "[" + i + "]" + uxDuration));
+				values.put("status", getXPathValue(xml, resource + "[" + i + "]" + statusPath));
+				values.put("startTime", getXPathValue(xml, resource + "[" + i + "]" + startTimePath));
+				files.get(runid).get(device).add(values);
 			}
+
 			System.out.println(xml);
 			for (String id : files.keySet()) {
 				for (String key : files.get(id).keySet()) {
